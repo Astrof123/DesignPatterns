@@ -13,8 +13,8 @@ class Settings:
         return self.__company
 
     @company.setter
-    def company(self, value: CompanyModel):
-        if isinstance(value, CompanyModel):
+    def company(self, value: CompanyModel|None):
+        if isinstance(value, CompanyModel) or value is None:
             self.__company = value
         else:
             raise ValueError("Ожидается экземпляр CompanyModel")

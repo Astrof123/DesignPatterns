@@ -24,9 +24,9 @@ class CompanyModel:
         return self.__INN
     
     @INN.setter
-    def INN(self, value: str) -> str:
-        if len(value.strip()) == 12:
-            self.__INN = value.strip()
+    def INN(self, value: str|int) -> str:
+        if len(str(value).strip()) == 12:
+            self.__INN = str(value).strip()
         else:
             raise ValueError("Поле INN должно быть длиной в 12 символов.")
 
@@ -36,9 +36,9 @@ class CompanyModel:
         return self.__account
     
     @account.setter
-    def account(self, value: str) -> str:
-        if len(value.strip()) == 11:
-            self.__account = value.strip()
+    def account(self, value: str|int) -> str:
+        if len(str(value).strip()) == 11:
+            self.__account = str(value).strip()
         else:
             raise ValueError("Поле account должно быть длиной в 11 символов.")
 
@@ -48,9 +48,9 @@ class CompanyModel:
         return self.__correspondent_account
     
     @correspondent_account.setter
-    def correspondent_account(self, value: str) -> str:
-        if len(value.strip()) == 11:
-            self.__correspondent_account = value.strip()
+    def correspondent_account(self, value: str|int) -> str:
+        if len(str(value).strip()) == 11:
+            self.__correspondent_account = str(value).strip()
         else:
             raise ValueError("Поле correspondent_account должно быть длиной в 11 символов.")
 
@@ -60,9 +60,9 @@ class CompanyModel:
         return self.__BIK
     
     @BIK.setter
-    def BIK(self, value: str) -> str:
-        if len(value.strip()) == 9:
-            self.__BIK = value.strip()
+    def BIK(self, value: str|int) -> str:
+        if len(str(value).strip()) == 9:
+            self.__BIK = str(value).strip()
         else:
             raise ValueError("Поле BIK должно быть длиной в 9 символов.")
 
@@ -73,7 +73,7 @@ class CompanyModel:
     
     @ownership_type.setter
     def ownership_type(self, value: str) -> str:
-        if value in ["Private", "Municipal", "State"]:
+        if len(value.strip()) <= 5:
             self.__ownership_type = value.strip()
         else:
-            raise ValueError('Поле ownership_type должно быть либо "Private", либо "Municipal", либо "State')
+            raise ValueError('Поле ownership_type должно быть длиной не более 5 символов.')
