@@ -70,5 +70,5 @@ class SettingsManager:
         self.__settings.company.account = "40702810123"
         self.__settings.company.correspondent_account = "30101810123"
         self.__settings.company.BIK = "044525225"
-        self.__settings.company.ownership_type = "State"
+        self.__settings.company.ownership_type = "ООО"
         self.__settings.company.INN = "123456789012"
