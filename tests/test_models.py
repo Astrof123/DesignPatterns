@@ -42,6 +42,22 @@ class TestCompanyModel(unittest.TestCase):
         assert result == True
 
 
+    def test_check_company_settings(self):
+        # Подготовка
+        filename = "settings.json"
+        manager = SettingsManager(filename)
+
+        manager.load()
+
+        # Проверка
+        assert manager.settings.company.name != ""
+        assert manager.settings.company.INN != ""
+        assert manager.settings.company.correspondent_account != ""
+        assert manager.settings.company.BIK != ""
+        assert manager.settings.company.ownership_type != ""
+        assert manager.settings.company.account != ""
+
+
     def test_check_companies_settings(self):
         # Подготовка
         filename = "settings.json"
@@ -49,10 +65,107 @@ class TestCompanyModel(unittest.TestCase):
         manager2 = SettingsManager(filename)
 
         manager1.load()
-        # manager2.load()
+        manager2.load()
 
         # Проверка
-        assert manager1.company_setting == manager2.company_setting
+        assert manager1.settings.company == manager2.settings.company
+
+
+    def test_load_settings_from_different_location(self):
+        # Подготовка
+        filepath = "tests/test_data/test_settings.json"
+        manager = SettingsManager(filepath)
+        manager.load()
+
+        # Проверяем, что настройки загрузились правильно
+        assert manager.settings.company.name == "Тестовая Компания из другого места"
+        assert manager.settings.company.INN == "123456789012"
+
+
+    def test_check_company_is_none(self):
+        # Подготовка
+        filename = "settings.json"
+        manager = SettingsManager(filename)
+        manager.settings.company = None
+
+        assert manager.settings.company == None
+
+
+    def test_check_companys_fields(self):
+        # Подготовка
+        filename = "settings.json"
+        manager = SettingsManager(filename)
+        manager.load()
+        
+
+        with self.assertRaises(ValueError):
+            manager.settings.company.name = None
+
+        manager.settings.company.name = "Ромашка"
+        assert manager.settings.company.name == "Ромашка"
+
+
+        with self.assertRaises(ValueError):
+            manager.settings.company.INN = None
+
+        with self.assertRaises(ValueError):
+            manager.settings.company.INN = "12345678901"
+
+        manager.settings.company.INN = "123456789012"
+        assert manager.settings.company.INN == "123456789012"
+
+        manager.settings.company.INN = 123456789012
+        assert manager.settings.company.INN == "123456789012"
+
+
+        with self.assertRaises(ValueError):
+            manager.settings.company.account = None
+
+        with self.assertRaises(ValueError):
+            manager.settings.company.account = "4070281000"
+
+        manager.settings.company.account = "40702810000"
+        assert manager.settings.company.account == "40702810000"
+
+        manager.settings.company.account = 40702810000
+        assert manager.settings.company.account == "40702810000"
+
+
+        with self.assertRaises(ValueError):
+            manager.settings.company.correspondent_account = None
+
+        with self.assertRaises(ValueError):
+            manager.settings.company.correspondent_account = "3010181000"
+
+        manager.settings.company.correspondent_account = "30101810000"
+        assert manager.settings.company.correspondent_account == "30101810000"
+
+        manager.settings.company.correspondent_account = 30101810000
+        assert manager.settings.company.correspondent_account == "30101810000"
+
+
+        with self.assertRaises(ValueError):
+            manager.settings.company.BIK = None
+
+        with self.assertRaises(ValueError):
+            manager.settings.company.BIK = "04452522"
+
+        manager.settings.company.BIK = "044525225"
+        assert manager.settings.company.BIK == "044525225"
+
+        manager.settings.company.BIK = 144525225
+        assert manager.settings.company.BIK == "144525225"
+
+
+        with self.assertRaises(ValueError):
+            manager.settings.company.ownership_type = None
+
+        with self.assertRaises(ValueError):
+            manager.settings.company.ownership_type = "000 А0О"
+
+        manager.settings.company.ownership_type = "АО"
+        assert manager.settings.company.ownership_type == "АО"
+
 
 
 if __name__ == "__main__":

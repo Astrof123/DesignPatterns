@@ -1,11 +1,11 @@
+from src.models.settings import Settings
 from src.models.company_model import CompanyModel
 import json
 import os
 
 class SettingsManager:
     __file_name:str = ""
-    __company: CompanyModel = None
-
+    
 
     def __new__(cls, file_name: str):
         if not hasattr(cls, 'instance'):
@@ -15,13 +15,14 @@ class SettingsManager:
 
     def __init__(self, file_name: str):
         self.file_name = file_name
-        self.default()
+        self.__settings = Settings()
+        self.default_settings()
 
 
     @property
-    def company_setting(self) -> CompanyModel:
-        return self.__company
-
+    def settings(self) -> Settings:
+        return self.__settings
+    
 
     @property
     def file_name(self) -> str:
@@ -41,20 +42,33 @@ class SettingsManager:
             raise FileNotFoundError("Не найден файл настроек!")
 
         try:
-            file = open(self.__file_name)
-            data = json.load(file)
+            with open(self.__file_name, "r", encoding="utf-8") as f:
+                data = json.load(f)
 
-            if "company" in data:
-                item = data["company"]
-                self.__company.name = item["name"] 
-                return True
-
+            return self.convert(data)
+        except Exception as error:
+            print(error)
             return False
+        
+    
+    def convert(self, data: dict) -> bool:
+        if "company" in data:
+            company_data = data["company"]
+            self.__settings.company.name = company_data["name"]
+            self.__settings.company.account = company_data["account"]
+            self.__settings.company.correspondent_account = company_data["correspondent_account"]
+            self.__settings.company.BIK = company_data["BIK"]
+            self.__settings.company.ownership_type = company_data["ownership_type"]
+            self.__settings.company.INN = company_data["INN"]
+        
+            return True
 
-        except:
-            return False
+        return False
 
-
-    def default(self):
-        self.__company = CompanyModel()
-        self.__company.name = "Ромашка"
+    def default_settings(self):
+        self.__settings.company.name = "Рога и копыта"
+        self.__settings.company.account = "40702810123"
+        self.__settings.company.correspondent_account = "30101810123"
+        self.__settings.company.BIK = "044525225"
+        self.__settings.company.ownership_type = "ООО"
+        self.__settings.company.INN = "123456789012"
