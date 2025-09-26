@@ -1,7 +1,8 @@
+from src.models.storage_model import StorageModel
 from src.settings_manager import SettingsManager
 from src.models.company_model import CompanyModel
 import unittest
-
+import uuid
 
 class TestCompanyModel(unittest.TestCase):
 
@@ -71,6 +72,23 @@ class TestCompanyModel(unittest.TestCase):
         assert manager1.settings.company == manager2.settings.company
 
 
+    # Проверка на сравнение двух по значению одинаковых моделей
+    def test_equals_storage_model_create(self):
+        # Подготовка
+
+        id = str(uuid.uuid4())
+        storage1 = StorageModel()
+        storage2 = StorageModel()
+
+        # Действие GUID
+        storage1.id = id
+        storage2.id = id
+        # Проверки
+
+
+        assert storage1 == storage2
+
+
     def test_load_settings_from_different_location(self):
         # Подготовка
         filepath = "tests/test_data/test_settings.json"
@@ -79,7 +97,7 @@ class TestCompanyModel(unittest.TestCase):
 
         # Проверяем, что настройки загрузились правильно
         assert manager.settings.company.name == "Тестовая Компания из другого места"
-        assert manager.settings.company.INN == "123456789012"
+        assert manager.settings.company.INN == 123456789012
 
 
     def test_check_company_is_none(self):
@@ -112,10 +130,10 @@ class TestCompanyModel(unittest.TestCase):
             manager.settings.company.INN = "12345678901"
 
         manager.settings.company.INN = "123456789012"
-        assert manager.settings.company.INN == "123456789012"
+        assert manager.settings.company.INN == 123456789012
 
         manager.settings.company.INN = 123456789012
-        assert manager.settings.company.INN == "123456789012"
+        assert manager.settings.company.INN == 123456789012
 
 
         with self.assertRaises(ValueError):
@@ -125,10 +143,10 @@ class TestCompanyModel(unittest.TestCase):
             manager.settings.company.account = "4070281000"
 
         manager.settings.company.account = "40702810000"
-        assert manager.settings.company.account == "40702810000"
+        assert manager.settings.company.account == 40702810000
 
         manager.settings.company.account = 40702810000
-        assert manager.settings.company.account == "40702810000"
+        assert manager.settings.company.account == 40702810000
 
 
         with self.assertRaises(ValueError):
@@ -137,11 +155,11 @@ class TestCompanyModel(unittest.TestCase):
         with self.assertRaises(ValueError):
             manager.settings.company.correspondent_account = "3010181000"
 
-        manager.settings.company.correspondent_account = "30101810000"
-        assert manager.settings.company.correspondent_account == "30101810000"
+        manager.settings.company.correspondent_account = 30101810000
+        assert manager.settings.company.correspondent_account == 30101810000
 
         manager.settings.company.correspondent_account = 30101810000
-        assert manager.settings.company.correspondent_account == "30101810000"
+        assert manager.settings.company.correspondent_account == 30101810000
 
 
         with self.assertRaises(ValueError):
@@ -150,11 +168,11 @@ class TestCompanyModel(unittest.TestCase):
         with self.assertRaises(ValueError):
             manager.settings.company.BIK = "04452522"
 
-        manager.settings.company.BIK = "044525225"
-        assert manager.settings.company.BIK == "044525225"
+        manager.settings.company.BIK = "144525225"
+        assert manager.settings.company.BIK == 144525225
 
         manager.settings.company.BIK = 144525225
-        assert manager.settings.company.BIK == "144525225"
+        assert manager.settings.company.BIK == 144525225
 
 
         with self.assertRaises(ValueError):

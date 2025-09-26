@@ -1,10 +1,14 @@
 
-class CompanyModel:
+from src.core.validator import Validator
+from src.core.abstract_model import AbstractModel
+
+
+class CompanyModel(AbstractModel):
     __name: str = ""
-    __INN: str = ""
-    __account: str = ""
-    __correspondent_account: str = ""
-    __BIK: str = ""
+    __INN: int = 0
+    __account: int = 0
+    __correspondent_account: int = 0
+    __BIK: int = 0
     __ownership_type: str = ""
 
     @property
@@ -13,14 +17,8 @@ class CompanyModel:
     
     @name.setter
     def name(self, value: str) -> str:
-
-        if isinstance(value, str):
-            if value.strip() != "":
-                self.__name = value.strip()
-            else:
-                raise ValueError("Поле name не должно быть пустым")
-        else:
-            raise ValueError("Поле name должно быть строкой")
+        Validator.validate(value, str)
+        self.__name = value.strip()
 
     @property
     def INN(self) -> str:
@@ -28,13 +26,8 @@ class CompanyModel:
     
     @INN.setter
     def INN(self, value: str|int) -> str:
-        if isinstance(value, (str, int)):
-            if len(str(value).strip()) == 12:
-                self.__INN = str(value).strip()
-            else:
-                raise ValueError("Поле INN должно быть длиной в 12 символов.")
-        else:
-            raise ValueError("Поле INN должно быть строкой или числом")
+        Validator.validate(value, (str, int), 12)
+        self.__INN = int(value)
 
     @property
     def account(self) -> str:
@@ -42,13 +35,9 @@ class CompanyModel:
     
     @account.setter
     def account(self, value: str|int) -> str:
-        if isinstance(value, (str, int)):
-            if len(str(value).strip()) == 11:
-                self.__account = str(value).strip()
-            else:
-                raise ValueError("Поле account должно быть длиной в 11 символов.")
-        else:
-            raise ValueError("Поле account должно быть строкой или числом")
+        Validator.validate(value, (str, int), 11)
+        self.__account = int(value)
+
 
     @property
     def correspondent_account(self) -> str:
@@ -56,13 +45,9 @@ class CompanyModel:
     
     @correspondent_account.setter
     def correspondent_account(self, value: str|int) -> str:
-        if isinstance(value, (str, int)):
-            if len(str(value).strip()) == 11:
-                self.__correspondent_account = str(value).strip()
-            else:
-                raise ValueError("Поле correspondent_account должно быть длиной в 11 символов.")
-        else:
-            raise ValueError("Поле correspondent_account должно быть строкой или числом")
+        Validator.validate(value, (str, int), 11)
+        self.__correspondent_account = int(value)
+  
 
     @property
     def BIK(self) -> str:
@@ -70,13 +55,8 @@ class CompanyModel:
     
     @BIK.setter
     def BIK(self, value: str|int) -> str:
-        if isinstance(value, (str, int)):
-            if len(str(value).strip()) == 9:
-                self.__BIK = str(value).strip()
-            else:
-                raise ValueError("Поле BIK должно быть длиной в 9 символов.")
-        else:
-            raise ValueError("Поле BIK должно быть строкой или числом")
+        Validator.validate(value, (str, int), 9)
+        self.__BIK = int(value)
 
     @property
     def ownership_type(self) -> str:
