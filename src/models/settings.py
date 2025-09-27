@@ -1,6 +1,6 @@
 
 from src.models.company_model import CompanyModel
-
+from src.core.validator import ArgumentException
 
 class Settings:
     __company: CompanyModel = None
@@ -17,5 +17,5 @@ class Settings:
         if isinstance(value, CompanyModel) or value is None:
             self.__company = value
         else:
-            raise ValueError("Ожидается экземпляр CompanyModel")
+            raise ArgumentException("Ожидается экземпляр CompanyModel")
     

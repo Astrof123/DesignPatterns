@@ -1,17 +1,38 @@
+class ArgumentException(Exception):
+    pass     
+    
+
+class OperationException(Exception):
+    pass    
+
+
 class Validator:
 
     @staticmethod
-    def validate(value, variable_type, variable_len=None):
+    def validate(value, variable_type, variable_len=None, comparison_sign="="):
         if value is None:
-            raise ValueError("Пустой аргумент")
+            if isinstance(variable_type, tuple):
+                if type(None) not in variable_type:
+                    raise ArgumentException("Аргумент не может быть None")
+                
+            elif variable_type is not type(None):
+                raise ArgumentException("Аргумент не может быть None")
 
         if not isinstance(value, variable_type):
-            raise ValueError(f"Аргумент должен быть типа {variable_type}")
+            raise ArgumentException(f"Аргумент должен быть типа {variable_type}")
         
         if len(str(value).strip()) == 0:
-            raise ValueError(f"Аргумент не должен быть пустым")
+            raise ArgumentException(f"Аргумент не должен быть пустым")
 
-        if variable_len is not None and len(str(value).strip()) != variable_len:
-            raise ValueError("Некорректная длина аргумента")
-        
+        if variable_len is not None:
+            if comparison_sign == "=":
+                if len(str(value).strip()) != variable_len:
+                    raise ArgumentException("Некорректная длина аргумента")
+            elif comparison_sign == ">":
+                if len(str(value).strip()) > variable_len:
+                    raise ArgumentException("Некорректная длина аргумента")   
+            elif comparison_sign == "<":
+                if len(str(value).strip()) < variable_len:
+                    raise ArgumentException("Некорректная длина аргумента")        
+                
         return True

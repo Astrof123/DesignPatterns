@@ -1,3 +1,7 @@
+from src.models.group_nomenclature_model import GroupNomenclature
+from src.models.nomenclature_model import Nomenclature
+from src.core.validator import ArgumentException
+from src.models.unit_measurement_model import UnitMeasurement
 from src.models.storage_model import StorageModel
 from src.settings_manager import SettingsManager
 from src.models.company_model import CompanyModel
@@ -106,7 +110,18 @@ class TestCompanyModel(unittest.TestCase):
         manager = SettingsManager(filename)
         manager.settings.company = None
 
+        # Проверка
         assert manager.settings.company == None
+
+
+    def test_check_settings_wrong_file(self):
+        # Подготовка
+        filename = "settings.jsen"
+        
+
+        # Проверка
+        with self.assertRaises(ArgumentException):
+            manager = SettingsManager(filename)
 
 
     def test_check_companys_fields(self):
@@ -116,17 +131,17 @@ class TestCompanyModel(unittest.TestCase):
         manager.load()
         
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ArgumentException):
             manager.settings.company.name = None
 
         manager.settings.company.name = "Ромашка"
         assert manager.settings.company.name == "Ромашка"
 
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ArgumentException):
             manager.settings.company.INN = None
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ArgumentException):
             manager.settings.company.INN = "12345678901"
 
         manager.settings.company.INN = "123456789012"
@@ -136,10 +151,10 @@ class TestCompanyModel(unittest.TestCase):
         assert manager.settings.company.INN == 123456789012
 
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ArgumentException):
             manager.settings.company.account = None
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ArgumentException):
             manager.settings.company.account = "4070281000"
 
         manager.settings.company.account = "40702810000"
@@ -149,10 +164,10 @@ class TestCompanyModel(unittest.TestCase):
         assert manager.settings.company.account == 40702810000
 
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ArgumentException):
             manager.settings.company.correspondent_account = None
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ArgumentException):
             manager.settings.company.correspondent_account = "3010181000"
 
         manager.settings.company.correspondent_account = 30101810000
@@ -162,10 +177,10 @@ class TestCompanyModel(unittest.TestCase):
         assert manager.settings.company.correspondent_account == 30101810000
 
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ArgumentException):
             manager.settings.company.BIK = None
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ArgumentException):
             manager.settings.company.BIK = "04452522"
 
         manager.settings.company.BIK = "144525225"
@@ -175,15 +190,98 @@ class TestCompanyModel(unittest.TestCase):
         assert manager.settings.company.BIK == 144525225
 
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ArgumentException):
             manager.settings.company.ownership_type = None
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ArgumentException):
             manager.settings.company.ownership_type = "000 А0О"
 
         manager.settings.company.ownership_type = "АО"
         assert manager.settings.company.ownership_type == "АО"
 
+
+    def test_not_empty_create_unitmeasure_model(self):
+        # Подготовка
+        base_range = UnitMeasurement("грамм", 1)
+        new_range = UnitMeasurement("кг", 1000, base_range)
+
+        # Действие
+        
+        # Проверка
+        assert base_range.name == "грамм"
+        assert new_range.name == "кг"
+        assert base_range.coefficient == 1
+        assert new_range.coefficient == 1000
+        assert base_range.base_unit == None
+        assert new_range.base_unit == base_range
+
+
+    def test_check_unitmeasure_fields(self):
+
+        # Подготовка
+        base_range = UnitMeasurement("грамм", 1)
+
+        # Действие
+
+        # Проверка
+        with self.assertRaises(ArgumentException):
+            base_range.name = 123
+
+        with self.assertRaises(ArgumentException):
+            base_range.name = None
+        
+        with self.assertRaises(ArgumentException):
+            base_range.coefficient = None
+
+        with self.assertRaises(ArgumentException):
+            base_range.coefficient = "123"
+
+        with self.assertRaises(ArgumentException):
+            base_range.base_unit = "123"
+
+
+    def test_check_nomenclature_fields(self):
+
+        # Подготовка
+        nomenclature_model = Nomenclature()
+
+        # Действие
+        nomenclature_model.name = "Хлеб"
+        nomenclature_model.group_nomenclature = GroupNomenclature()
+        nomenclature_model.unit_measurement = UnitMeasurement("грамм", 1)
+        nomenclature_model.full_name = "Хлебобулочные изделия"
+
+
+        # Проверка
+
+        assert nomenclature_model.name == "Хлеб"
+
+        with self.assertRaises(ArgumentException):
+            nomenclature_model.name = 123
+
+        with self.assertRaises(ArgumentException):
+            nomenclature_model.name = "1" * 51
+        
+
+        assert nomenclature_model.group_nomenclature != None
+
+        with self.assertRaises(ArgumentException):
+            nomenclature_model.group_nomenclature = 123
+
+
+        assert nomenclature_model.unit_measurement != None
+
+        with self.assertRaises(ArgumentException):
+            nomenclature_model.unit_measurement = 123
+
+
+        assert nomenclature_model.full_name == "Хлебобулочные изделия"
+
+        with self.assertRaises(ArgumentException):
+            nomenclature_model.full_name = 123
+
+        with self.assertRaises(ArgumentException):
+            nomenclature_model.full_name = "1" * 256
 
 
 if __name__ == "__main__":

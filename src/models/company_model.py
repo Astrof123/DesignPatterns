@@ -4,21 +4,12 @@ from src.core.abstract_model import AbstractModel
 
 
 class CompanyModel(AbstractModel):
-    __name: str = ""
     __INN: int = 0
     __account: int = 0
     __correspondent_account: int = 0
     __BIK: int = 0
     __ownership_type: str = ""
 
-    @property
-    def name(self) -> str:
-        return self.__name
-    
-    @name.setter
-    def name(self, value: str) -> str:
-        Validator.validate(value, str)
-        self.__name = value.strip()
 
     @property
     def INN(self) -> str:
@@ -64,10 +55,6 @@ class CompanyModel(AbstractModel):
     
     @ownership_type.setter
     def ownership_type(self, value: str) -> str:
-        if isinstance(value, str):
-            if len(value.strip()) <= 5:
-                self.__ownership_type = value.strip()
-            else:
-                raise ValueError('Поле ownership_type должно быть длиной не более 5 символов.')
-        else:
-            raise ValueError("Поле ownership_type должно быть строкой")
+        Validator.validate(value, str, 5, ">")
+        self.__ownership_type = value
+

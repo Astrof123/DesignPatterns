@@ -1,13 +1,25 @@
 from abc import ABC
 import uuid
 
+from src.core.validator import Validator
+
 class AbstractModel(ABC):
     __id: str = ""
-
+    __name: str = ""
 
     def __init__(self):
         super().__init__()
         self.__id: str = uuid.uuid4()
+
+
+    @property
+    def name(self) -> str:
+        return self.__name
+    
+    @name.setter
+    def name(self, value: str) -> str:
+        Validator.validate(value, str, 50, ">")
+        self.__name = value.strip()
 
 
     @property
@@ -17,15 +29,9 @@ class AbstractModel(ABC):
 
     @id.setter
     def id(self, value: str) -> str:
-
-        if isinstance(value, str):
-            if value.strip() != "":
-                self.__id = value.strip()
-            else:
-                raise ValueError("Поле id не должно быть пустым")
-        else:
-            raise ValueError("Поле id должно быть строкой")
-        
+        Validator.validate(value, str)
+        self.__id = value.strip()
+                
 
     def __eq__(self, value: object) -> bool:
         if not isinstance(value, AbstractModel):
