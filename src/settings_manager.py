@@ -1,3 +1,4 @@
+from src.core.validator import ArgumentException, OperationException, Validator
 from src.models.settings import Settings
 from src.models.company_model import CompanyModel
 import json
@@ -30,24 +31,21 @@ class SettingsManager:
 
     @file_name.setter
     def file_name(self, value: str):
-        if value.strip() == "":
-            return 
-
-        if os.path.exists(value):
-            self.__file_name = value.strip()
+        Validator.validate(value, str)
+        full_file_name = os.path.abspath(value)        
+        if os.path.exists(full_file_name):
+            self.__file_name = full_file_name.strip()
+        else:
+            raise ArgumentException(f'Не найден файл настроек {full_file_name}')
 
     
     def load(self):
-        if self.__file_name.strip == "":
-            raise FileNotFoundError("Не найден файл настроек!")
-
         try:
             with open(self.__file_name, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
             return self.convert(data)
-        except Exception as error:
-            print(error)
+        except Exception:
             return False
         
     
