@@ -34,3 +34,31 @@ class UnitMeasurement(AbstractModel):
     def base_unit(self, value):
         Validator.validate(value, (type(None), UnitMeasurement))
         self.__base_unit = value
+
+
+    '''
+    Киллограмм
+    '''
+    @staticmethod
+    def create_kill(gramm):
+        return UnitMeasurement.create("кг", 1000, gramm)
+
+
+    '''
+    Грамм
+    '''
+    @staticmethod
+    def create_gramm():
+        return UnitMeasurement.create("грамм", 1)
+
+    '''
+    Фабричный метод
+    '''
+    @staticmethod
+    def create(name: str, coefficient: int, base_unit = None):
+        Validator.validate(name, str)
+        Validator.validate(coefficient, int)
+        Validator.validate(base_unit, (type(None), UnitMeasurement))
+        return UnitMeasurement(name, coefficient, base_unit)
+
+        

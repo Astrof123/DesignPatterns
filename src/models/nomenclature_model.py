@@ -9,6 +9,11 @@ class Nomenclature(AbstractModel):
     __group_nomenclature: GroupNomenclature = None
     __unit_measurement: UnitMeasurement = None
 
+
+    def __init__(self, fullname, group, ):
+        super().__init__()
+
+
     @property
     def full_name(self) -> str:
         return self.__full_name

@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 import uuid
 
 from src.core.validator import Validator
@@ -7,6 +7,7 @@ class AbstractModel(ABC):
     __id: str = ""
     __name: str = ""
 
+    @abstractmethod
     def __init__(self):
         super().__init__()
         self.__id: str = uuid.uuid4()
