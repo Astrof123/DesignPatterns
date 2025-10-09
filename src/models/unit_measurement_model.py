@@ -40,7 +40,7 @@ class UnitMeasurement(AbstractModel):
     Киллограмм
     '''
     @staticmethod
-    def create_kill(gramm):
+    def create_kilo(gramm):
         return UnitMeasurement.create("кг", 1000, gramm)
 
 
