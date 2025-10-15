@@ -1,17 +1,21 @@
 from src.models.unit_measurement_model import UnitMeasurement
-from src.models.group_nomenclature_model import GroupNomenclature
+from src.models.group_nomenclature_model import GroupNomenclatureModel
 from src.core.validator import Validator
 from src.core.abstract_model import AbstractModel
 
 
-class Nomenclature(AbstractModel):
+class NomenclatureModel(AbstractModel):
     __full_name: str = ""
-    __group_nomenclature: GroupNomenclature = None
+    __group_nomenclature: GroupNomenclatureModel = None
     __unit_measurement: UnitMeasurement = None
 
 
-    def __init__(self, fullname, group, ):
+    def __init__(self, name, fullname, group, unit):
         super().__init__()
+        self.name = name
+        self.full_name = fullname
+        self.group_nomenclature = group
+        self.unit_measurement = unit
 
 
     @property
@@ -29,8 +33,8 @@ class Nomenclature(AbstractModel):
         return self.__group_nomenclature
 
     @group_nomenclature.setter
-    def group_nomenclature(self, value: GroupNomenclature):
-        Validator.validate(value, GroupNomenclature)
+    def group_nomenclature(self, value: GroupNomenclatureModel):
+        Validator.validate(value, GroupNomenclatureModel)
         self.__group_nomenclature = value        
 
 

@@ -9,7 +9,7 @@ class OperationException(Exception):
 class Validator:
 
     @staticmethod
-    def validate(value, variable_type, variable_len=None, comparison_sign="="):
+    def validate(value, variable_type, variable_len=None, comparison_sign="=", name=None):
         if value is None:
             if isinstance(variable_type, tuple):
                 if type(None) not in variable_type:
@@ -35,4 +35,22 @@ class Validator:
                 if len(str(value).strip()) < variable_len:
                     raise ArgumentException("Некорректная длина аргумента")        
                 
+        return True
+    
+    def validate_models(value, variable_type, variable_name=None):
+        if value is None:
+            if isinstance(variable_type, tuple):
+                if type(None) not in variable_type:
+                    raise ArgumentException("Аргумент не может быть None")
+                
+            elif variable_type is not type(None):
+                raise ArgumentException("Аргумент не может быть None")
+
+        if not isinstance(value, variable_type):
+            raise ArgumentException(f"Аргумент должен быть типа {variable_type.__name__}")
+
+        if variable_name is not None:
+            if value.name != variable_name:
+                raise ArgumentException("Неверное поле name")
+
         return True
