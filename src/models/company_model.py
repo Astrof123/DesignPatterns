@@ -11,6 +11,9 @@ class CompanyModel(AbstractModel):
     __ownership_type: str = ""
 
 
+    def __init__(self):
+        super().__init__()
+
     @property
     def INN(self) -> str:
         return self.__INN
