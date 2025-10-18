@@ -1,3 +1,4 @@
 .vscode
 *.pyc
 code.md
+env_name
