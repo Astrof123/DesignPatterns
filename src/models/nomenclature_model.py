@@ -1,10 +1,10 @@
 from src.models.unit_measurement_model import UnitMeasurement
 from src.models.group_nomenclature_model import GroupNomenclatureModel
 from src.core.validator import Validator
-from src.core.abstract_model import AbstractModel
+from src.core.entity_model import EntityModel
 
 
-class NomenclatureModel(AbstractModel):
+class NomenclatureModel(EntityModel):
     __full_name: str = ""
     __group_nomenclature: GroupNomenclatureModel = None
     __unit_measurement: UnitMeasurement = None

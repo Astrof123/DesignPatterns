@@ -3,6 +3,9 @@ from abc import ABC, abstractmethod
 
 # Абстрактный класс для формирования ответов
 class AbstractResponse(ABC):
+
+    def __init__(self):
+        super().__init__()
     
     # Сформировать нужный ответ
     @abstractmethod

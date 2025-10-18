@@ -7,10 +7,10 @@ from src.core.response_format import ResponseFormats
 from src.core.validator import Validator
 from src.core.abstract_response import AbstractResponse
 
-class TestStorageModel(unittest.TestCase):
+class TestLogics(unittest.TestCase):
 
     # Проверим формирование CSV
-    def test_not_none_response_csv_build():
+    def test_not_none_response_csv_build(self):
         # Подготовка
         response = ResponseCsv()
         data = []
@@ -18,12 +18,12 @@ class TestStorageModel(unittest.TestCase):
         data.append(entity)
         
         # Действие
-        result = response.create("csv",)
+        result = response.build("csv", data)
         
         # Проверка
         assert result is not None
 
-    def test_not_none_factory_create():
+    def test_not_none_factory_create(self):
         # Подготовка
         factory = FactoryEntities()
         data = []
@@ -31,13 +31,14 @@ class TestStorageModel(unittest.TestCase):
         data.append(entity)
 
         # Действие
-        logic = factory.create(ResponseFormats.csv)
+        logic = factory.create(ResponseFormats.csv())
 
         assert logic is not None
-        instance = eval(logic)
+
+        instance = logic()
 
         Validator.validate(instance, AbstractResponse)
-        text = instance.build(ResponseFormats.csv, data)
+        text = instance.build(ResponseFormats.csv(), data)
 
         assert len(text) > 0
 

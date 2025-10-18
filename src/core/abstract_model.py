@@ -5,22 +5,11 @@ from src.core.validator import Validator
 
 class AbstractModel(ABC):
     __id: str = ""
-    __name: str = ""
 
     @abstractmethod
     def __init__(self):
         super().__init__()
         self.__id: str = uuid.uuid4()
-
-
-    @property
-    def name(self) -> str:
-        return self.__name
-    
-    @name.setter
-    def name(self, value: str) -> str:
-        Validator.validate(value, str, 50, ">")
-        self.__name = value.strip()
 
 
     @property

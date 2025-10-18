@@ -1,21 +1,24 @@
-from src.core.abstract_model import AbstactModel
+from src.core.abstract_model import AbstractModel
 from src.core.validator import Validator
 
 
 """
 Общий класс для наследования. Содержит стандартное определение: код, наименование
 """
-class EntityModel(AbstactModel):
+class EntityModel(AbstractModel):
     __name:str = ""
 
-    # Наименование
+    def __init__(self):
+        super().__init__()
+
+
     @property
     def name(self) -> str:
         return self.__name
-
+    
     @name.setter
-    def name(self, value:str):
-        Validator.validate(value, str)
+    def name(self, value: str) -> str:
+        Validator.validate(value, str, 50, ">")
         self.__name = value.strip()
 
 

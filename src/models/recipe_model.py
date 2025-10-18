@@ -1,9 +1,9 @@
 from src.core.validator import Validator
-from src.core.abstract_model import AbstractModel
+from src.core.entity_model import EntityModel
 from src.models.nomenclature_model import NomenclatureModel
 
 
-class RecipeModel(AbstractModel):
+class RecipeModel(EntityModel):
     __description: str = ""
     __ingredients = {}
 

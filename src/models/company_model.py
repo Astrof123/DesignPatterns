@@ -1,9 +1,9 @@
 
 from src.core.validator import Validator
-from src.core.abstract_model import AbstractModel
+from src.core.entity_model import EntityModel
 
 
-class CompanyModel(AbstractModel):
+class CompanyModel(EntityModel):
     __INN: int = 0
     __account: int = 0
     __correspondent_account: int = 0

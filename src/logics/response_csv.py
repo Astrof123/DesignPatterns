@@ -3,9 +3,12 @@ from src.core.common import common
 
 class ResponseCsv(AbstractResponse):
 
+    def __init__(self):
+        super().__init__()
+
     # Сформировать CSV 
-    def create(self, format: str, data: list):
-        text = super().create(format, data)
+    def build(self, format: str, data: list):
+        text = super().build(format, data)
 
         # Шапка
         item = data[0]

@@ -1,8 +1,8 @@
 from src.core.validator import Validator
-from src.core.abstract_model import AbstractModel
+from src.core.entity_model import EntityModel
 
 
-class UnitMeasurement(AbstractModel):
+class UnitMeasurement(EntityModel):
     __coefficient: int = 0
     __base_unit = None
     
