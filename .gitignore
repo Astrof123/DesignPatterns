@@ -3,3 +3,5 @@
 code.md
 env_name
 .idea
+myenv
+tests/test_output

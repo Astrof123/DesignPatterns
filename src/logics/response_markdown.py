@@ -1,36 +1,34 @@
 from src.core.abstract_response import AbstractResponse
 from src.core.common import common
 
-class ResponseCsv(AbstractResponse):
+class ResponseMarkdown(AbstractResponse):
 
     def __init__(self):
         super().__init__()
 
-    # Сформировать CSV 
     def build(self, format: str, data: list):
         text = super().build(format, data)
-
-        # Шапка
+ 
+        # Шапка таблицы
         item = data[0]
         fields = common.get_fields(item)
-
-        # Шапка CSV
-        for field in fields:
-            text += f"{field};"
-            
-        text = text.rstrip(';') + "\n"
-
+        
+        # Заголовок таблицы
+        text += "| " + " | ".join(fields) + " |\n"
+        text += "| " + " | ".join(["---"] * len(fields)) + " |\n"
+        
         # Данные
         for item in data:
+            row = []
             for field in fields:
                 value = getattr(item, field, "")
                 # Обрабатываем вложенные объекты
                 if hasattr(value, 'name'):
-                    text += f"{value.name};"
+                    row.append(str(value.name))
                 elif hasattr(value, 'id'):
-                    text += f"{value.id};"
+                    row.append(str(value.id))
                 else:
-                    text += f"{value};"
-            text = text.rstrip(';') + "\n"
+                    row.append(str(value))
+            text += "| " + " | ".join(row) + " |\n"
         
         return text

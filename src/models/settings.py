@@ -4,6 +4,7 @@ from src.core.validator import ArgumentException
 
 class Settings:
     __company: CompanyModel = None
+    __response_format: str = "CSV"
 
     def __init__(self):
         self.company = CompanyModel()
@@ -19,3 +20,14 @@ class Settings:
         else:
             raise ArgumentException("Ожидается экземпляр CompanyModel")
     
+    @property
+    def response_format(self) -> str:
+        return self.__response_format
+    
+    @response_format.setter
+    def response_format(self, value: str):
+        valid_formats = ["CSV", "Markdown", "Json", "XML"]
+        if value in valid_formats:
+            self.__response_format = value
+        else:
+            raise ArgumentException(f"Недопустимый формат. Допустимые значения: {valid_formats}")

@@ -59,8 +59,12 @@ class SettingsManager:
             self.__settings.company.ownership_type = company_data["ownership_type"]
             self.__settings.company.INN = company_data["INN"]
         
-            return True
 
+        if "response_format" in data:
+            self.__settings.response_format = data["response_format"]
+        
+            return True
+        
         return False
 
     def default_settings(self):
@@ -70,3 +74,4 @@ class SettingsManager:
         self.__settings.company.BIK = "044525225"
         self.__settings.company.ownership_type = "ООО"
         self.__settings.company.INN = "123456789012"
+        self.__settings.response_format = "CSV"
