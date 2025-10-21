@@ -18,7 +18,7 @@ class FactoryEntities:
     def __init__(self, settings: Settings = None):
         self.__settings = settings
 
-
+    # Создает объект для работы с указанным форматом
     def create(self, format: str) -> AbstractModel:
         if format not in self.__match.keys():
             raise OperationException("Формат не верный")
@@ -26,9 +26,10 @@ class FactoryEntities:
         return self.__match[format]
     
 
+    # Создает объект для работы с форматом по умолчанию из настроек
     def create_default(self):
         if self.__settings is None:
             raise OperationException("Настройки не установлены")
         
         format = self.__settings.response_format
-        return self.create(format)    
+        return self.create(format)

@@ -6,6 +6,7 @@ class ResponseMarkdown(AbstractResponse):
     def __init__(self):
         super().__init__()
 
+    # Преобразует данные в таблицу Markdown
     def build(self, format: str, data: list):
         text = super().build(format, data)
  

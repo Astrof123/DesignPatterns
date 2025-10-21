@@ -6,7 +6,7 @@ class ResponseCsv(AbstractResponse):
     def __init__(self):
         super().__init__()
 
-    # Сформировать CSV 
+    # Преобразует данные в формат CSV
     def build(self, format: str, data: list):
         text = super().build(format, data)
 

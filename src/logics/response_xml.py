@@ -6,7 +6,7 @@ class ResponseXml(AbstractResponse):
     def __init__(self):
         super().__init__()
 
-
+    # Преобразует данные в формат XML
     def build(self, format: str, data: list):
         super().build(format, data)
             
@@ -46,8 +46,8 @@ class ResponseXml(AbstractResponse):
         self._indent(root)
         return '<?xml version="1.0" encoding="UTF-8"?>\n' + ET.tostring(root, encoding='unicode', method='xml')
     
+    # Добавляет отступы для красивого форматирования XML
     def _indent(self, elem, level=0):
-        """Добавляет отступы для красивого форматирования XML"""
         i = "\n" + level * "  "
         if len(elem):
             if not elem.text or not elem.text.strip():

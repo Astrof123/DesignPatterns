@@ -14,14 +14,13 @@ factory = FactoryEntities()
 
 formats = {}
 
-"""
-Проверить доступность REST API
-"""
+# Проверить доступность REST API
 @app.route("/api/accessibility", methods=['GET'])
 def formats():
     return "SUCCESS"
 
 
+# Получить данные в указанном формате
 @app.route("/api/data/<data_type>/<format>", methods=['GET'])
 def get_data_formatted(data_type: str, format: str):
     
@@ -45,11 +44,13 @@ def get_data_formatted(data_type: str, format: str):
         return {"error": str(e)}, 400
 
 
+# Получить список доступных моделей данных
 @app.route("/api/data/responses/models", methods=['GET'])
 def get_models():
     return {"result": [field for field in Repository.get_key_fields(Repository)]}
 
 
+# Получить список доступных форматов ответа
 @app.route("/api/data/responses/formats", methods=['GET'])
 def get_formats():
     return {"result": [format for format in ResponseFormats.get_all_formats()]}

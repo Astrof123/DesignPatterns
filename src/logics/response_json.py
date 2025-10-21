@@ -6,6 +6,7 @@ class ResponseJson(AbstractResponse):
     def __init__(self):
         super().__init__()
 
+    # Преобразует данные в формат JSON
     def build(self, format: str, data: list):
         super().build(format, data)
             
@@ -45,6 +46,7 @@ class ResponseJson(AbstractResponse):
         return json.dumps(result, ensure_ascii=False, indent=2)
     
 
+    # Преобразует значение в JSON-совместимый формат
     def _convert_value(self, value):
         if hasattr(value, 'isoformat'):  # datetime и подобные
             return value.isoformat()
