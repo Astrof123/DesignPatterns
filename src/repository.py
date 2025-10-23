@@ -1,4 +1,3 @@
-
 class Repository:
     __data= {}
     
@@ -11,3 +10,9 @@ class Repository:
     def data(self):
         return self.__data
     
+    # Получить список ключевых полей данных
+    def get_key_fields(self):
+        return [attr[:-4] for attr in dir(self) 
+                if not attr.startswith('_') 
+                and not callable(getattr(self, attr))
+                and attr.endswith('_key')]
