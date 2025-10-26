@@ -1,5 +1,6 @@
 import unittest
 from datetime import datetime
+from src.core.abstract_model import AbstractModel
 from src.models.nomenclature_model import NomenclatureModel
 from src.models.group_nomenclature_model import GroupNomenclatureModel
 from src.models.unit_measurement_model import UnitMeasurement
@@ -7,12 +8,13 @@ from src.models.recipe_model import RecipeModel
 from src.logics.datetime_convertor import DatetimeConvertor
 from src.logics.reference_convertor import ReferenceConvertor
 from src.logics.basic_convertor import BasicConvertor
+from src.core.validator import ArgumentException
 
 
 class TestConvertors(unittest.TestCase):
-    # Подготовка тестовых данных
+
     def setUp(self):
-        
+        """Подготовка тестовых данных"""
         # Создаем базовые сущности
         self.group = GroupNomenclatureModel()
         self.group.name = "Основная группа"
@@ -24,38 +26,53 @@ class TestConvertors(unittest.TestCase):
         self.reference_convertor = ReferenceConvertor()
         self.basic_convertor = BasicConvertor()
 
+    # Тесты для DatetimeConvertor
 
-    # Конвертация GroupNomenclatureModel с datetime полями возвращает правильный формат
-    def test_convert_group_nomenclature_with_datetime_returns_correct_format(self):
+    # Конвертация datetime объекта возвращает строку в правильном формате
+    def test_convert_datetime_returns_correct_format(self):
         # Подготовка
-        # Добавляем datetime поле в группу через рефлексию
-        created_date = datetime(2023, 10, 15, 14, 30, 45)
-        self.group._GroupNomenclatureModel__created_date = created_date
+        test_datetime = datetime(2023, 10, 15, 14, 30, 45)
         
         # Действие
-        result = self.datetime_convertor.convert(self.group)
+        result = self.datetime_convertor.convert(test_datetime)
         
         # Проверка
-        if result:  # Если есть datetime поля
-            for field, value in result.items():
-                self.assertEqual(value, "2023-10-15 14:30:45")
+        self.assertEqual(result, "2023-10-15 14:30:45")
 
-    # Конвертация объекта без datetime полей возвращает пустой словарь
-    def test_convert_object_without_datetime_returns_empty_dict(self):
+    # Конвертация не-datetime объекта вызывает исключение
+    def test_convert_non_datetime_raises_exception(self):
         # Подготовка
-        entity = GroupNomenclatureModel()
-        entity.name = "Группа без дат"
+        invalid_obj = "not a datetime"
         
-        # Действие
-        result = self.datetime_convertor.convert(entity)
+        # Действие и Проверка
+        with self.assertRaises(ArgumentException):
+            self.datetime_convertor.convert(invalid_obj)
+
+    # Конвертация различных datetime объектов работает корректно
+    def test_convert_various_datetime_objects_works_correctly(self):
+        # Подготовка
+        test_cases = [
+            datetime(2023, 1, 1, 0, 0, 0),
+            datetime(2024, 12, 31, 23, 59, 59),
+            datetime(2000, 6, 15, 12, 30, 0)
+        ]
         
-        # Проверка
-        self.assertEqual(result, {})
+        expected_results = [
+            "2023-01-01 00:00:00",
+            "2024-12-31 23:59:59", 
+            "2000-06-15 12:30:00"
+        ]
+        
+        # Действие и Проверка
+        for i, test_datetime in enumerate(test_cases):
+            with self.subTest(datetime=test_datetime):
+                result = self.datetime_convertor.convert(test_datetime)
+                self.assertEqual(result, expected_results[i])
 
     # Тесты для ReferenceConvertor
 
-    # Конвертация NomenclatureModel возвращает ID группы и единицы измерения
-    def test_convert_nomenclature_returns_group_and_unit_ids(self):
+    # Конвертация AbstractModel объекта возвращает его ID
+    def test_convert_abstract_model_returns_id(self):
         # Подготовка
         entity = self.nomenclature
         
@@ -63,163 +80,134 @@ class TestConvertors(unittest.TestCase):
         result = self.reference_convertor.convert(entity)
         
         # Проверка
-        self.assertIn("group_nomenclature", result)
-        self.assertIn("unit_measurement", result)
-        self.assertEqual(result["group_nomenclature"], self.group.id)
-        self.assertEqual(result["unit_measurement"], self.unit.id)
+        self.assertEqual(result, entity.id)
 
-    # Конвертация UnitMeasurement с base_unit возвращает ID базовой единицы
-    def test_convert_unit_measurement_with_base_unit_returns_base_unit_id(self):
+    # Конвертация различных AbstractModel объектов возвращает их ID
+    def test_convert_various_abstract_models_return_their_ids(self):
         # Подготовка
-        gramm = UnitMeasurement("грамм", 1)
-        kilogram = UnitMeasurement("килограмм", 1000, gramm)
+        test_entities = [self.group, self.unit, self.nomenclature, self.recipe]
         
-        # Действие
-        result = self.reference_convertor.convert(kilogram)
-        
-        # Проверка
-        self.assertIn("base_unit", result)
-        self.assertEqual(result["base_unit"], gramm.id)
+        # Действие и Проверка
+        for entity in test_entities:
+            with self.subTest(entity_type=type(entity).__name__):
+                result = self.reference_convertor.convert(entity)
+                self.assertEqual(result, entity.id)
 
-    # Конвертация UnitMeasurement без base_unit не возвращает base_unit поле
-    def test_convert_unit_measurement_without_base_unit_does_not_return_base_unit(self):
+    # Конвертация не-AbstractModel объекта вызывает исключение
+    def test_convert_non_abstract_model_raises_exception(self):
         # Подготовка
-        gramm = UnitMeasurement("грамм", 1)  # Без базовой единицы
+        invalid_obj = "not an abstract model"
         
-        # Действие
-        result = self.reference_convertor.convert(gramm)
-        
-        # Проверка
-        self.assertNotIn("base_unit", result)
+        # Действие и Проверка
+        with self.assertRaises(ArgumentException):
+            self.reference_convertor.convert(invalid_obj)
 
-    # Конвертация RecipeModel с ingredients возвращает список ID ингредиентов
-    def test_convert_recipe_with_ingredients_returns_ingredient_ids(self):
+    # Конвертация None объекта вызывает исключение
+    def test_convert_none_raises_exception(self):
         # Подготовка
-        recipe = self.recipe
-        # Добавляем ингредиенты через рефлексию
-        recipe._RecipeModel__ingredients = [self.nomenclature]
+        invalid_obj = None
         
-        # Действие
-        result = self.reference_convertor.convert(recipe)
-        
-        # Проверка
-        self.assertIn("ingredients", result)
-        self.assertEqual(result["ingredients"][0], self.nomenclature.id)
-
-    # Конвертация объекта без ссылочных полей возвращает пустой словарь
-    def test_convert_object_without_references_returns_empty_dict(self):
-        # Подготовка
-        # UnitMeasurement без base_unit не имеет ссылочных полей
-        unit = UnitMeasurement("шт", 1)
-        
-        # Действие
-        result = self.reference_convertor.convert(unit)
-        
-        # Проверка
-        self.assertEqual(result, {})
+        # Действие и Проверка
+        with self.assertRaises(ArgumentException):
+            self.reference_convertor.convert(invalid_obj)
 
     # Тесты для BasicConvertor
 
-    # Конвертация GroupNomenclatureModel возвращает базовые поля
-    def test_convert_group_nomenclature_returns_basic_fields(self):
+    # Конвертация строки возвращает ту же строку
+    def test_convert_string_returns_same_string(self):
         # Подготовка
-        entity = self.group
+        test_string = "test string"
         
         # Действие
-        result = self.basic_convertor.convert(entity)
+        result = self.basic_convertor.convert(test_string)
         
         # Проверка
-        self.assertIn("id", result)
-        self.assertIn("name", result)
-        self.assertEqual(result["name"], "Основная группа")
+        self.assertEqual(result, test_string)
 
-    # Конвертация UnitMeasurement возвращает базовые поля
-    def test_convert_unit_measurement_returns_basic_fields(self):
+    # Конвертация целого числа возвращает то же число
+    def test_convert_integer_returns_same_integer(self):
         # Подготовка
-        entity = self.unit
+        test_int = 42
         
         # Действие
-        result = self.basic_convertor.convert(entity)
+        result = self.basic_convertor.convert(test_int)
         
         # Проверка
-        self.assertIn("id", result)
-        self.assertIn("name", result)
-        self.assertIn("coefficient", result)
-        self.assertEqual(result["name"], "шт")
-        self.assertEqual(result["coefficient"], 1)
+        self.assertEqual(result, test_int)
 
-    # Конвертация NomenclatureModel возвращает строковые поля
-    def test_convert_nomenclature_returns_string_fields(self):
+    # Конвертация дробного числа возвращает то же число
+    def test_convert_float_returns_same_float(self):
         # Подготовка
-        entity = self.nomenclature
+        test_float = 3.14
         
         # Действие
-        result = self.basic_convertor.convert(entity)
+        result = self.basic_convertor.convert(test_float)
         
         # Проверка
-        self.assertIn("id", result)
-        self.assertIn("name", result)
-        self.assertIn("full_name", result)
-        self.assertEqual(result["name"], "Товар 1")
-        self.assertEqual(result["full_name"], "Полное название товара 1")
+        self.assertEqual(result, test_float)
 
-    # Конвертация RecipeModel возвращает строковые поля
-    def test_convert_recipe_returns_string_fields(self):
+    # Конвертация булевого значения возвращает то же значение
+    def test_convert_boolean_returns_same_boolean(self):
         # Подготовка
-        entity = self.recipe
+        test_bool = True
         
         # Действие
-        result = self.basic_convertor.convert(entity)
+        result = self.basic_convertor.convert(test_bool)
         
         # Проверка
-        self.assertIn("id", result)
-        self.assertIn("name", result)
-        self.assertIn("description", result)
-        self.assertEqual(result["name"], "Рецепт 1")
-        self.assertEqual(result["description"], "Описание рецепта")
+        self.assertEqual(result, test_bool)
 
-
-    # Комбинированная конвертация NomenclatureModel всеми конверторами
-    def test_combined_conversion_nomenclature_works_correctly(self):
+    # Конвертация не-базового типа вызывает исключение
+    def test_convert_non_basic_type_raises_exception(self):
         # Подготовка
-        entity = self.nomenclature
+        invalid_obj = self.group  # AbstractModel, не базовый тип
         
-        # Действие
-        basic_result = self.basic_convertor.convert(entity)
-        reference_result = self.reference_convertor.convert(entity)
-        datetime_result = self.datetime_convertor.convert(entity)
-        
-        # Проверка
-        # BasicConvertor должен содержать базовые поля
-        self.assertIn("name", basic_result)
-        self.assertIn("full_name", basic_result)
-        
-        # ReferenceConvertor должен содержать ссылочные поля
-        self.assertIn("group_nomenclature", reference_result)
-        self.assertIn("unit_measurement", reference_result)
-        
-        # DatetimeConvertor должен быть пустым (нет datetime полей)
-        self.assertEqual(datetime_result, {})
+        # Действие и Проверка
+        with self.assertRaises(ArgumentException):
+            self.basic_convertor.convert(invalid_obj)
 
-    # Конвертация UnitMeasurement с base_unit всеми конверторами
-    def test_combined_conversion_unit_measurement_with_base_unit(self):
+    # Конвертация списка вызывает исключение
+    def test_convert_list_raises_exception(self):
         # Подготовка
-        gramm = UnitMeasurement("грамм", 1)
-        kilogram = UnitMeasurement("килограмм", 1000, gramm)
+        invalid_obj = [1, 2, 3]
         
-        # Действие
-        basic_result = self.basic_convertor.convert(kilogram)
-        reference_result = self.reference_convertor.convert(kilogram)
-        
-        # Проверка
-        # BasicConvertor должен содержать базовые поля
-        self.assertIn("name", basic_result)
-        self.assertIn("coefficient", basic_result)
-        
-        # ReferenceConvertor должен содержать ссылку на базовую единицу
-        self.assertIn("base_unit", reference_result)
-        self.assertEqual(reference_result["base_unit"], gramm.id)
+        # Действие и Проверка
+        with self.assertRaises(ArgumentException):
+            self.basic_convertor.convert(invalid_obj)
 
+    # Конвертация None вызывает исключение
+    def test_convert_none_basic_raises_exception(self):
+        # Подготовка
+        invalid_obj = None
+        
+        # Действие и Проверка
+        with self.assertRaises(ArgumentException):
+            self.basic_convertor.convert(invalid_obj)
+
+    # Интеграционные тесты - проверка корректности работы валидации
+
+    # Все конверторы корректно проверяют типы входных данных
+    def test_all_convertors_validate_input_types_correctly(self):
+        # Подготовка
+        test_cases = [
+            (self.basic_convertor, "test string", str, True),
+            (self.basic_convertor, 123, int, True),
+            (self.basic_convertor, self.group, AbstractModel, False),
+            (self.reference_convertor, self.group, AbstractModel, True),
+            (self.reference_convertor, "string", AbstractModel, False),
+            (self.datetime_convertor, datetime.now(), datetime, True),
+            (self.datetime_convertor, "2023-01-01", datetime, False)
+        ]
+        
+        # Действие и Проверка
+        for convertor, test_obj, expected_type, should_succeed in test_cases:
+            with self.subTest(convertor=type(convertor).__name__, obj_type=type(test_obj).__name__):
+                if should_succeed:
+                    result = convertor.convert(test_obj)
+                    self.assertIsNotNone(result)
+                else:
+                    with self.assertRaises(ArgumentException):
+                        convertor.convert(test_obj)
 
 
 if __name__ == '__main__':

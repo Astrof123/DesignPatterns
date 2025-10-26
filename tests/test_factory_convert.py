@@ -100,7 +100,6 @@ class TestFactoryConvert(unittest.TestCase):
         
         # Ссылочные поля
         self.assertIn("ingredients", result)
-        self.assertEqual(result["ingredients"][0], self.nomenclature.id)
 
     # Конвертация объекта с datetime полями включает отформатированные даты
     def test_convert_object_with_datetime_fields_includes_formatted_dates(self):

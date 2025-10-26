@@ -1,3 +1,6 @@
+from datetime import datetime
+from src.core.abstract_model import AbstractModel
+from src.core.common import common
 from src.logics.reference_convertor import ReferenceConvertor
 from src.logics.basic_convertor import BasicConvertor
 from src.logics.datetime_convertor import DatetimeConvertor
@@ -17,22 +20,25 @@ class FactoryConvert:
     }
 
     def convert(self, obj) -> dict:
-        """
-        Выполняет полную конвертацию объекта через все конверторы.
-        Объединяет результаты в единый словарь.
-        
-        Args:
-            obj: Объект для конвертации
-            
-        Returns:
-            dict: Комбинированный словарь со всеми преобразованными полями
-        """
-        # Последовательно применяем все конверторы
-        # BasicConvertor - базовые типы
-        result = self.__match["basic"]().convert(obj)
-        # DatetimeConvertor - datetime поля (объединяем с предыдущим результатом)
-        result = result | self.__match["datetime"]().convert(obj)
-        # ReferenceConvertor - ссылочные поля (объединяем с предыдущим результатом)
-        result = result | self.__match["reference"]().convert(obj)
-        
+
+        fields = common.get_fields(obj)
+        result = {}
+
+        for field in fields:
+            value = getattr(obj, field)
+
+            if isinstance(value, (int, float, str, bool)):
+                result[field] = self.__match["basic"]().convert(value)
+
+            elif isinstance(value, AbstractModel):
+                result[field] = self.__match["reference"]().convert(value)
+
+            elif isinstance(value, datetime):
+                result[field] = self.__match["datetime"]().convert(value)
+
+            elif isinstance(value, list):
+                result[field] = []
+                for v in value:
+                    result[field].append(self.convert(v))
+
         return result
