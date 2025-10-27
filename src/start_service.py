@@ -1,3 +1,4 @@
+from src.models.ingredient_model import IngredientModel
 from src.core.validator import Validator
 from src.models.group_nomenclature_model import GroupNomenclatureModel
 from src.repository import Repository
@@ -133,7 +134,7 @@ class StartService():
         Validator.validate_models(ingredient, NomenclatureModel)
         Validator.validate(count, int)
 
-        recipe.ingredients[ingredient.name] = count
+        recipe.ingredients.append(IngredientModel("Ингредиент: " + ingredient.name, ingredient, count))
 
     '''
     Основной метод для генерации эталонных данных

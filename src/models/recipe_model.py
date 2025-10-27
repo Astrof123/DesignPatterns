@@ -5,7 +5,7 @@ from src.models.nomenclature_model import NomenclatureModel
 
 class RecipeModel(EntityModel):
     __description: str = ""
-    __ingredients = {}
+    __ingredients = []
 
     def __init__(self, name, description):
         super().__init__()
