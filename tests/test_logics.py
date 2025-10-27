@@ -84,7 +84,7 @@ class TestLogics(unittest.TestCase):
         data = [self.nomenclature1, self.nomenclature2]
         
         # Действие
-        result = response.build("CSV", data)
+        result = response.build("csv", data)
         filename = "nomenclature.csv"
         filepath = self.save_to_file(result, filename)
         
@@ -104,7 +104,7 @@ class TestLogics(unittest.TestCase):
         data = [self.nomenclature1]
         
         # Действие
-        result = response.build("Markdown", data)
+        result = response.build("markdown", data)
         filename = "nomenclature.md"
         filepath = self.save_to_file(result, filename)
         
@@ -121,7 +121,7 @@ class TestLogics(unittest.TestCase):
         data = [self.nomenclature1]
         
         # Действие
-        result = response.build("Json", data)
+        result = json.dumps(response.build("json", data))
         filename = "nomenclature.json"
         filepath = self.save_to_file(result, filename)
         
@@ -157,7 +157,7 @@ class TestLogics(unittest.TestCase):
         data = [self.group]
         
         # Действие
-        result = response.build("Json", data)
+        result = json.dumps(response.build("json", data))
         filename = "group_nomenclature.json"
         filepath = self.save_to_file(result, filename)
         
@@ -174,7 +174,7 @@ class TestLogics(unittest.TestCase):
         data = [self.unit]
         
         # Действие
-        result = response.build("Json", data)
+        result = json.dumps(response.build("json", data))
         filename = "unit_measurement.json"
         filepath = self.save_to_file(result, filename)
         
@@ -183,7 +183,7 @@ class TestLogics(unittest.TestCase):
         self.assertGreater(os.path.getsize(filepath), 0)
         parsed = json.loads(result)
         self.assertEqual(parsed[0]["name"], "Штука")
-        self.assertEqual(parsed[0]["coefficient"], "1")
+        self.assertEqual(parsed[0]["coefficient"], 1)
 
     # Формирование рецепта в JSON содержит данные рецепта
     def test_build_recipe_json_format_contains_recipe_data(self):
@@ -192,7 +192,7 @@ class TestLogics(unittest.TestCase):
         data = [self.recipe]
         
         # Действие
-        result = response.build("Json", data)
+        result = json.dumps(response.build("json", data))
         filename = "recipe.json"
         filepath = self.save_to_file(result, filename)
         
@@ -232,6 +232,10 @@ class TestLogics(unittest.TestCase):
                     }[format_name]
                     
                     filename = f"{entity_name}.{extension}"
+
+                    if extension == "json":
+                        result = json.dumps(result)
+
                     filepath = self.save_to_file(result, filename)
                     
                     # Проверка
@@ -260,6 +264,10 @@ class TestLogics(unittest.TestCase):
                 format_name = extension.upper() if extension != "md" else "Markdown"
                 result = response.build(format_name, data)
                 filename = f"validation_test_nomenclature.{extension}"
+
+                if extension == "json":
+                    result = json.dumps(result)
+
                 filepath = self.save_to_file(result, filename)
                 
                 # Проверка
