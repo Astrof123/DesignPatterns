@@ -35,6 +35,23 @@ class UnitMeasurement(EntityModel):
         Validator.validate(value, (type(None), UnitMeasurement))
         self.__base_unit = value
 
+    """
+    Возвращает корневую единицу измерения
+    """
+    def root_base_unit(self):
+        if self.base_unit == None:
+            return self
+        else:
+            return self.base_unit.root_base_unit()
+
+    """
+    Возвращает quantity приведенную к корневой единице измерения
+    """
+    def convert_to_root_base_unit(self, quantity):
+        if self.base_unit == None:
+            return quantity
+        else:
+            return self.base_unit.convert_to_root_base_unit(quantity * self.coefficient)
 
     '''
     Киллограмм
