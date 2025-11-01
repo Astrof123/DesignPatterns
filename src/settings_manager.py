@@ -6,7 +6,7 @@ import os
 
 class SettingsManager:
     __file_name:str = ""
-    
+    __settings: Settings
 
     def __new__(cls, file_name: str):
         if not hasattr(cls, 'instance'):
@@ -65,6 +65,12 @@ class SettingsManager:
         
             return True
         
+        if "first_start" in data:
+            self.__settings.first_start = data["first_start"]
+        
+            return True
+
+
         return False
 
     def default_settings(self):
@@ -74,4 +80,5 @@ class SettingsManager:
         self.__settings.company.BIK = "044525225"
         self.__settings.company.ownership_type = "ООО"
         self.__settings.company.INN = "123456789012"
+        self.__settings.response_format = "CSV"
         self.__settings.response_format = "CSV"

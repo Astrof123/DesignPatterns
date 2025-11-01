@@ -1,5 +1,8 @@
+import datetime
 import json
 import connexion
+from src.data_manager import DataManager
+from src.logics.report import Report
 from src.logics.factory_entities import FactoryEntities
 from src.settings_manager import SettingsManager
 from src.core.response_format import ResponseFormats
@@ -9,8 +12,16 @@ from src.start_service import StartService
 
 app = connexion.FlaskApp(__name__)
 
+manager = SettingsManager("settings.json")
+
+
 start_service = StartService()
-start_service.start()
+start_service.start(manager.settings.first_start)
+
+data_manager = DataManager()
+
+report = Report(start_service.data)
+
 factory = FactoryEntities()
 
 formats = {}
@@ -102,7 +113,7 @@ def get_recipe_by_id(id: str):
     
     recipe = list(filter(lambda recipe: recipe.id == id, data))
 
-    if recipe == 0:
+    if len(recipe) == 0:
         return Response(
             status=404,
             response=json.dumps({"error": "Recipe not found"}),
@@ -117,6 +128,71 @@ def get_recipe_by_id(id: str):
         response=json.dumps(result[0]),
         content_type="application/json"
     )
+
+
+"""
+Возвращает отчет
+"""
+@app.route("/api/data/report/<storage_id>/<start_date>/<end_date>", methods=['GET'])
+def get_report(storage_id: str, start_date: str, end_date: str):
+
+    try:
+        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
+    except ValueError:
+        return Response(
+            status=400,
+            response=json.dumps({"error": "Wrong start_date format. Must be year-month-day, for example 2025-12-25."}),
+            content_type="application/json"
+        )
+
+    try:
+        end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
+    except ValueError:
+        return Response(
+            status=400,
+            response=json.dumps({"error": "Wrong end_date format. Must be year-month-day, for example 2025-12-25."}),
+            content_type="application/json"
+        )
+
+    storages = list(start_service.storages.values())
+    storage = list(filter(lambda storage: storage.id == storage_id, storages))
+
+    if len(storage) == 0:
+        return Response(
+            status=404,
+            response=json.dumps({"error": "Storage not found"}),
+            content_type="application/json"
+        )       
+
+
+    result = report.generateReport(storage[0], start_date, end_date)
+    
+    return Response(
+        status=200,
+        response=json.dumps({"result": result}),
+        content_type="application/json"
+    )
+
+
+"""
+Сохраняет репозиторий в файл
+"""
+@app.route("/api/data/save", methods=['POST'])
+def save_data():
+
+    if data_manager.save_data_to_file(start_service.data, factory):
+        return Response(
+            status=200,
+            response=json.dumps({"success": True}),
+            content_type="application/json"
+        )
+    else:
+        return Response(
+            status=500,
+            response=json.dumps({"error": "Failed to write to file"}),
+            content_type="application/json"
+        )
+
 
 
 if __name__ == '__main__':
