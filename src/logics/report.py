@@ -1,17 +1,18 @@
 
+from src.logics.factory_convert import FactoryConvert
 from src.models.nomenclature_model import NomenclatureModel
 from src.models.transaction_model import TransactionModel
 from src.repository import Repository
 from src.core.validator import Validator
-from typing import List, Dict, Set, Tuple
+from typing import List
 
 
 class Report:
     __data: dict
+    __factory: FactoryConvert = FactoryConvert()
 
     def __init__(self, data):
         self.data = data
-
     @property
     def data(self):
         return self.__data
@@ -36,8 +37,8 @@ class Report:
             outcome = balance[2]
 
             row = {
-                "nomenclature": nomenclature.name,
-                "unit": nomenclature.unit_measurement.root_base_unit().name,
+                "nomenclature": self.__factory.convert(nomenclature),
+                "unit": self.__factory.convert(nomenclature.unit_measurement.root_base_unit()),
                 "start_balance": start_balance,
                 "income": income,
                 "outcome": outcome,

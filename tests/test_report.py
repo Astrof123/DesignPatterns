@@ -71,8 +71,6 @@ class TestReport(unittest.TestCase):
             assert "income" in row
             assert "outcome" in row
             assert "end_balance" in row
-            assert isinstance(row["nomenclature"], str)
-            assert isinstance(row["unit"], str)
             assert isinstance(row["start_balance"], (int, float))
             assert isinstance(row["income"], (int, float))
             assert isinstance(row["outcome"], (int, float))
