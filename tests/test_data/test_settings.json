@@ -7,5 +7,6 @@
         "BIK": "044525225",
         "ownership_type": "ООО"
     },
-    "response_format": "Json"
+    "response_format": "json",
+    "first_start": true
 }

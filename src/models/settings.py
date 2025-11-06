@@ -1,10 +1,11 @@
 
 from src.models.company_model import CompanyModel
-from src.core.validator import ArgumentException
+from src.core.validator import ArgumentException, Validator
 
 class Settings:
     __company: CompanyModel = None
     __response_format: str = "CSV"
+    __first_start: bool = True
 
     def __init__(self):
         self.company = CompanyModel()
@@ -31,3 +32,12 @@ class Settings:
             self.__response_format = value
         else:
             raise ArgumentException(f"Недопустимый формат. Допустимые значения: {valid_formats}")
+        
+    @property
+    def first_start(self) -> bool:
+        return self.__first_start
+    
+    @first_start.setter
+    def first_start(self, value: bool):
+        Validator.validate(value, bool)
+        self.__first_start = value

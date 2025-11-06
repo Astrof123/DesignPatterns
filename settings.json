@@ -7,5 +7,6 @@
         "name": "Ромашка",
         "ownership_type": "ООО"
     },
-    "response_format": "Json"
+    "response_format": "json",
+    "first_start": true
 }
