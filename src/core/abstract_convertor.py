@@ -7,7 +7,7 @@ class AbstractConvertor(ABC):
     """
     
     @abstractmethod
-    def convert(self, obj) -> dict:
+    def convert(self, obj):
         """
         Абстрактный метод для конвертации объекта в словарь.
         

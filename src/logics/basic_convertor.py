@@ -8,6 +8,6 @@ class BasicConvertor(AbstractConvertor):
     Обрабатывает примитивные типы
     """
 
-    def convert(self, obj) -> dict:
+    def convert(self, obj):
         Validator.validate(obj, (int, float, str, bool))
         return obj

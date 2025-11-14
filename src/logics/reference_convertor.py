@@ -11,6 +11,6 @@ class ReferenceConvertor(AbstractConvertor):
     Преобразует объекты моделей в их идентификаторы.
     """
 
-    def convert(self, obj) -> dict:
+    def convert(self, obj):
         Validator.validate(obj, AbstractModel)
         return obj.id

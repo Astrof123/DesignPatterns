@@ -10,6 +10,6 @@ class DatetimeConvertor(AbstractConvertor):
     Преобразует datetime в строки стандартного формата.
     """
 
-    def convert(self, obj) -> dict:
+    def convert(self, obj):
         Validator.validate(obj, datetime)
         return obj.strftime("%Y-%m-%d %H:%M:%S")

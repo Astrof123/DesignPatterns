@@ -1,4 +1,5 @@
 
+from src.logics.prototype_report import PrototypeReport
 from src.logics.factory_convert import FactoryConvert
 from src.models.nomenclature_model import NomenclatureModel
 from src.models.transaction_model import TransactionModel
@@ -55,20 +56,26 @@ class Report:
     """
     def calculateBalance(self, nomenclature, storage, start_date, end_date):
         transactions: List[TransactionModel] = list(self.data[Repository.transaction_key].values())
+
+        report_prototype = PrototypeReport(transactions)
+
+        transactions_up_startdate = report_prototype.filter_up_startdate(report_prototype, start_date)
+        transactions_between_startdate_end_date = report_prototype.filter_between_startdate_end_date(report_prototype, start_date, end_date)
+
         start_balance = 0
         income = 0
         outcome = 0
 
-        for transaction in transactions:
-            if transaction.storage == storage and transaction.nomenclature == nomenclature:
-                quantity = transaction.unit.convert_to_root_base_unit(transaction.quantity)
-                
-                if transaction.date < start_date:
-                    start_balance += quantity
-                if transaction.date >= start_date and transaction.date <= end_date and quantity > 0:
-                    income += quantity
-                if transaction.date >= start_date and transaction.date <= end_date and quantity < 0:
-                    outcome += quantity * -1
+        for transaction in transactions_up_startdate.data:
+            quantity = transaction.unit.convert_to_root_base_unit(transaction.quantity)
+            start_balance += quantity
+
+        for transaction in transactions_between_startdate_end_date.data:
+            quantity = transaction.unit.convert_to_root_base_unit(transaction.quantity)
+            if quantity > 0:
+                income += quantity
+            if quantity < 0:
+                outcome += quantity * -1
 
 
         return [start_balance, income, outcome]
