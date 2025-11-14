@@ -1,12 +1,16 @@
 import datetime
 import json
 import connexion
+from src.core.prototype import Prototype
+from src.dtos.filter_sorting_dto import FilterSortingDto
+from src.core.filter_type import FilterType
+from src.core.common import common
 from src.data_manager import DataManager
 from src.logics.report import Report
 from src.logics.factory_entities import FactoryEntities
 from src.settings_manager import SettingsManager
 from src.core.response_format import ResponseFormats
-from flask import request, Response
+from flask import jsonify, request, Response
 from src.repository import Repository
 from src.start_service import StartService
 
@@ -129,6 +133,87 @@ def get_recipe_by_id(id: str):
         content_type="application/json"
     )
 
+"""
+Возвращает поля, по которым можно сделать фильтр, и типы фильтрации
+"""
+@app.route("/api/filters/<data_type>", methods=['GET'])
+def get_filters_by_model(data_type: str):
+
+    if data_type not in Repository.get_key_fields(Repository):
+        return Response(
+            status=400,
+            response=json.dumps({"error": "Wrong data_type"}),
+            content_type="application/json"
+        )
+    
+    first_elem = list(start_service.data[data_type].values())[0]
+
+    fields_name = common.get_fields_including_internal(first_elem)
+    
+    result = {
+        "filter_field_names": fields_name,
+        "filter_types": FilterType.get_all_types()
+    }
+
+    return Response(
+        status=200,
+        response=json.dumps(result),
+        content_type="application/json"
+    )
+
+
+"""
+Получить отфильтрованные данные в указанном формате
+"""
+@app.route("/api/data/<data_type>/<format>", methods=['POST'])
+def get_data_filtered(data_type: str, format: str):
+    data = request.get_json()
+    
+    if not data:
+        return jsonify({'error': 'No JSON data received'}), 400
+
+    filters = data.get('filters')
+
+    if data_type not in Repository.get_key_fields(Repository):
+        return Response(
+            status=400,
+            response=json.dumps({"error": "Wrong data_type"}),
+            content_type="application/json"
+        )
+    
+    if format not in ResponseFormats.get_all_formats():
+        return Response(
+            status=400,
+            response=json.dumps({"error": "Wrong format"}),
+            content_type="application/json"
+        )
+    
+    try:
+        data = list(start_service.data[data_type].values())
+        
+        filtersDto = FilterSortingDto(filters, [])
+
+        prototype = Prototype(data)
+        
+        filtered_prototype = prototype.filter(prototype, filtersDto)
+
+
+        logic = factory.create(format)
+        result = logic().build(format, filtered_prototype.data)
+        
+        return Response(
+            status=200,
+            response=json.dumps(result),
+            content_type="application/json"
+        )
+        
+    except Exception as e:
+        return Response(
+            status=400,
+            response=json.dumps({"error": str(e)}),
+            content_type="application/json"
+        )
+
 
 """
 Возвращает отчет
@@ -172,6 +257,62 @@ def get_report(storage_id: str, start_date: str, end_date: str):
         response=json.dumps({"result": result}),
         content_type="application/json"
     )
+
+
+"""
+Возвращает фильтрованный отчет
+"""
+@app.route("/api/data/report/<storage_id>/<start_date>/<end_date>", methods=['POST'])
+def get_filtered_report(storage_id: str, start_date: str, end_date: str):
+    data = request.get_json()
+    
+    if not data:
+        return jsonify({'error': 'No JSON data received'}), 400
+
+    filter_model = data.get('filter_model')
+    filters = data.get('filters')
+
+    try:
+        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
+    except ValueError:
+        return Response(
+            status=400,
+            response=json.dumps({"error": "Wrong start_date format. Must be year-month-day, for example 2025-12-25."}),
+            content_type="application/json"
+        )
+
+    try:
+        end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
+    except ValueError:
+        return Response(
+            status=400,
+            response=json.dumps({"error": "Wrong end_date format. Must be year-month-day, for example 2025-12-25."}),
+            content_type="application/json"
+        )
+
+    storages = list(start_service.storages.values())
+    storage = list(filter(lambda storage: storage.id == storage_id, storages))
+
+    if len(storage) == 0:
+        return Response(
+            status=404,
+            response=json.dumps({"error": "Storage not found"}),
+            content_type="application/json"
+        )       
+
+    
+    filtersDto = FilterSortingDto(filters, [])
+
+
+    result = report.generateReport(storage[0], start_date, end_date, filtersDto, filter_model)
+    
+    return Response(
+        status=200,
+        response=json.dumps({"result": result}),
+        content_type="application/json"
+    )
+
+
 
 
 """

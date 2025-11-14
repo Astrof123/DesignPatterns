@@ -1,5 +1,5 @@
-
-from src.logics.prototype_report import PrototypeReport
+from src.dtos.filter_sorting_dto import FilterSortingDto
+from src.core.prototype import Prototype
 from src.logics.factory_convert import FactoryConvert
 from src.models.nomenclature_model import NomenclatureModel
 from src.models.transaction_model import TransactionModel
@@ -26,12 +26,18 @@ class Report:
     """
     Генерирует отчет
     """
-    def generateReport(self, storage, start_date, end_date) -> list:
+    def generateReport(self, storage, start_date, end_date, filtersDto = None, filter_model = None) -> list:
         nomenclatures: List[NomenclatureModel] = list(self.data[Repository.nomenclature_key].values())
+
+        if filtersDto is not None and filter_model == "nomenclature":
+            prototype = Prototype(nomenclatures)
+        
+            nomenclatures = prototype.filter(prototype, filtersDto).data
+
         report = []
 
         for nomenclature in nomenclatures:
-            balance = self.calculateBalance(nomenclature, storage, start_date, end_date)
+            balance = self.calculateBalance(nomenclature, storage, start_date, end_date, filtersDto, filter_model)
 
             start_balance = balance[0]
             income = balance[1]
@@ -54,13 +60,55 @@ class Report:
     """
     Рассчитывает баланс по номенклатуре
     """
-    def calculateBalance(self, nomenclature, storage, start_date, end_date):
+    def calculateBalance(self, nomenclature, storage, start_date, end_date, filtersDto = None, filter_model = None):
         transactions: List[TransactionModel] = list(self.data[Repository.transaction_key].values())
 
-        report_prototype = PrototypeReport(transactions)
+        if filtersDto is not None and filter_model == "transaction":
+            prototype = Prototype(transactions)
+        
+            transactions = prototype.filter(prototype, filtersDto).data
 
-        transactions_up_startdate = report_prototype.filter_up_startdate(report_prototype, start_date)
-        transactions_between_startdate_end_date = report_prototype.filter_between_startdate_end_date(report_prototype, start_date, end_date)
+
+        report_prototype = Prototype(transactions)
+
+        by_nomenclature_and_storage = FilterSortingDto([
+            {
+                "field_name": "nomenclature/id",
+                "value": nomenclature.id,
+                "type": "equals"
+            },
+            {
+                "field_name": "storage/id",
+                "value": storage.id,
+                "type": "equals"
+            }
+        ], [])
+
+        report_prototype = report_prototype.filter(report_prototype, by_nomenclature_and_storage)
+
+        up_startdate = FilterSortingDto([
+            {
+                "field_name": "date",
+                "value": start_date,
+                "type": "less"
+            }
+        ], [])
+
+        between_startdate_end_date = FilterSortingDto([
+            {
+                "field_name": "date",
+                "value": start_date,
+                "type": "greater_or_equal"
+            },
+            {
+                "field_name": "date",
+                "value": end_date,
+                "type": "less_or_equal"
+            }
+        ], [])
+
+        transactions_up_startdate = report_prototype.filter(report_prototype, up_startdate)
+        transactions_between_startdate_end_date = report_prototype.filter(report_prototype, between_startdate_end_date)
 
         start_balance = 0
         income = 0
