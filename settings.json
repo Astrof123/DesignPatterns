@@ -8,5 +8,6 @@
         "ownership_type": "ООО"
     },
     "response_format": "json",
-    "first_start": true
+    "first_start": true,
+    "block_period": "2025-10-28"
 }
