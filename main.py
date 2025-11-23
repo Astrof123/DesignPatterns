@@ -1,6 +1,8 @@
 import datetime
 import json
+import time
 import connexion
+from src.logics.balances_manager import BalancesManager
 from src.core.prototype import Prototype
 from src.dtos.filter_sorting_dto import FilterSortingDto
 from src.core.filter_type import FilterType
@@ -19,8 +21,11 @@ app = connexion.FlaskApp(__name__)
 manager = SettingsManager("settings.json")
 
 
+
 start_service = StartService()
 start_service.start(manager.settings.first_start)
+balances_manager = BalancesManager(start_service.data, manager.settings.block_period)
+start_service.balances = balances_manager.calculation_balances_up_blocking_date()
 
 data_manager = DataManager()
 
@@ -313,6 +318,78 @@ def get_filtered_report(storage_id: str, start_date: str, end_date: str):
     )
 
 
+"""
+Возвращает текущую дату блокировки
+"""
+@app.route("/api/block_period", methods=['GET'])
+def get_block_date():
+    return Response(
+        status=200,
+        response=json.dumps({"block_period": manager.settings.block_period.strftime('%Y-%m-%d')}),
+        content_type="application/json"
+    )
+
+
+"""
+Меняет текущую дату блокировки
+"""
+@app.route("/api/block_period", methods=['POST'])
+def change_block_date():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({'error': 'No JSON data received'}), 400
+
+    new_block_period = data.get('new_block_period')
+
+    try:
+        new_block_period = datetime.datetime.strptime(new_block_period, "%Y-%m-%d").date()
+    except ValueError:
+        return Response(
+            status=400,
+            response=json.dumps({"error": "Wrong new_block_period format. Must be, for example 2012-04-23."}),
+            content_type="application/json"
+        )
+
+    manager.settings.block_period = new_block_period
+    balances_manager.block_period = new_block_period
+    start_service.balances = balances_manager.calculation_balances_up_blocking_date()
+
+    return Response(
+
+        status=200,
+        response=json.dumps({"success": True}),
+        content_type="application/json"
+    )
+
+
+"""
+Возвращает остатки на указанную дату
+"""
+@app.route("/api/data/balances", methods=['POST'])
+def get_balances_by_date():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({'error': 'No JSON data received'}), 400
+
+    date = data.get('date')
+
+    try:
+        date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
+    except ValueError:
+        return Response(
+            status=400,
+            response=json.dumps({"error": "Wrong date format. Must be, for example 2012-04-23."}),
+            content_type="application/json"
+        )
+    balances = balances_manager.calculation_balances_by_date(date)
+
+    return Response(
+        status=200,
+        response=json.dumps({"result": balances}),
+        content_type="application/json"
+    )
 
 
 """

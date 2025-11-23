@@ -1,3 +1,4 @@
+import datetime
 from src.core.validator import ArgumentException, OperationException, Validator
 from src.models.settings import Settings
 from src.models.company_model import CompanyModel
@@ -63,13 +64,15 @@ class SettingsManager:
         if "response_format" in data:
             self.__settings.response_format = data["response_format"]
         
-            return True
         
         if "first_start" in data:
             self.__settings.first_start = data["first_start"]
         
+        
+        if "block_period" in data:
+            self.__settings.block_period = datetime.datetime.strptime(data["block_period"], "%Y-%m-%dT%H:%M:%S").date()
+        
             return True
-
 
         return False
 
@@ -81,4 +84,5 @@ class SettingsManager:
         self.__settings.company.ownership_type = "ООО"
         self.__settings.company.INN = "123456789012"
         self.__settings.response_format = "CSV"
-        self.__settings.response_format = "CSV"
+        self.__settings.first_start = True
+        self.__settings.block_period = datetime.datetime.strptime("2025-10-28", "%Y-%m-%d").date()

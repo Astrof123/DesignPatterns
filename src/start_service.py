@@ -19,6 +19,7 @@ class StartService():
         self.data[Repository.recipe_key] = {}
         self.data[Repository.transaction_key] = {}
         self.data[Repository.storage_key] = {}
+        self.data[Repository.balances_key] = []
 
     def __new__(cls):
         if not hasattr(cls, 'instance'):
@@ -261,3 +262,13 @@ class StartService():
     @property
     def storages(self):
         return self.data[Repository.storage_key]
+    
+    """Остатки"""
+    @property
+    def balances(self):
+        return self.data[Repository.balances_key]
+    
+    @balances.setter
+    def balances(self, value):
+        Validator.validate(value, list)
+        self.data[Repository.balances_key] = value

@@ -7,6 +7,7 @@ class Repository:
     recipe_key: str = "recipe"
     transaction_key: str = "transaction"
     storage_key: str = "storage"
+    balances_key: str = "balances"
 
     @property
     def data(self):
