@@ -15,7 +15,6 @@ class BalancesManager:
     __block_period: date = None
     __data: dict
     __factory: FactoryConvert = FactoryConvert()
-    __balances = None
 
     def __init__(self, data, block_period):
         self.data = data
@@ -54,7 +53,8 @@ class BalancesManager:
                     "balance": quantity,
                 }
 
-        self.__balances = balances
+        self.data[Repository.balances_key] = list(balances.values())
+        
         return list(balances.values())
     
     def calculation_balances_by_date(self, date):
@@ -68,11 +68,11 @@ class BalancesManager:
         """
 
 
-        if self.__balances is None:
+        if self.data[Repository.balances_key] is None:
             self.calculation_balances_up_blocking_date()
 
         if self.block_period >= date:
-            return list(self.__balances.values())
+            return list(self.data[Repository.balances_key].values())
 
 
         transactions: List[TransactionModel] = list(self.data[Repository.transaction_key].values())
@@ -93,7 +93,7 @@ class BalancesManager:
 
         transactions_after_block_period = balance_prototype.filter(balance_prototype, after_block_period)
 
-        balances_by_date = copy.deepcopy(self.__balances)
+        balances_by_date = copy.deepcopy(self.data[Repository.balances_key])
         for transaction in transactions_after_block_period.data:
             quantity = transaction.unit.convert_to_root_base_unit(transaction.quantity)
 
