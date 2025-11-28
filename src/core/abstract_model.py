@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
+from src.core.event_type import EventType
 import uuid
 
-from src.core.validator import Validator
+from src.core.validator import Validator, OperationException
 
 class AbstractModel(ABC):
     __id: str = ""
@@ -28,3 +29,16 @@ class AbstractModel(ABC):
             return False
 
         return self.__id == value.id
+    
+    """
+    Обработка события
+    """
+    def handle(self, event: str, params):
+        Validator.validate(event, str)
+        events = EventType.events()
+
+        if event not in events:
+            raise OperationException(f"{events} - не является событием!")
+        
+
+    

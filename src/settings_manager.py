@@ -86,3 +86,6 @@ class SettingsManager:
         self.__settings.response_format = "CSV"
         self.__settings.first_start = True
         self.__settings.block_period = datetime.datetime.strptime("2025-10-28", "%Y-%m-%d").date()
+
+
+    

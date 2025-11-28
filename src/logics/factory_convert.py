@@ -4,7 +4,8 @@ from src.core.common import common
 from src.logics.reference_convertor import ReferenceConvertor
 from src.logics.basic_convertor import BasicConvertor
 from src.logics.datetime_convertor import DatetimeConvertor
-
+from src.core.observe_service import ObserveService
+from src.core.event_type import EventType
 
 class FactoryConvert:
     """
@@ -18,6 +19,10 @@ class FactoryConvert:
         "datetime": DatetimeConvertor, # Для datetime полей
         "reference": ReferenceConvertor # Для ссылочных полей
     }
+
+    def __init__(self):
+        ObserveService.add(self)
+
 
     def convert(self, obj) -> dict:
 
@@ -40,5 +45,8 @@ class FactoryConvert:
                 result[field] = []
                 for v in value:
                     result[field].append(self.convert(v))
+
+        # Формируем событие о конвертации json
+        ObserveService.create_event(EventType.convert_to_json(), result)
 
         return result
