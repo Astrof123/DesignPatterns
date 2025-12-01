@@ -2,6 +2,8 @@ import datetime
 import json
 import time
 import connexion
+from src.core.validator import ArgumentException
+from src.logics.reference_service import ReferenceService
 from src.logics.balances_manager import BalancesManager
 from src.core.prototype import Prototype
 from src.dtos.filter_sorting_dto import FilterSortingDto
@@ -24,10 +26,13 @@ manager = SettingsManager("settings.json")
 
 start_service = StartService()
 start_service.start(manager.settings.first_start)
+
+reference_service = ReferenceService(start_service.data)
+
 balances_manager = BalancesManager(start_service.data, manager.settings.block_period)
 start_service.balances = balances_manager.calculation_balances_up_blocking_date()
 
-data_manager = DataManager()
+data_manager = DataManager(start_service.data)
 
 report = Report(start_service.data)
 
@@ -398,7 +403,7 @@ def get_balances_by_date():
 @app.route("/api/data/save", methods=['POST'])
 def save_data():
 
-    if data_manager.save_data_to_file(start_service.data, factory):
+    if data_manager.save_data_to_file():
         return Response(
             status=200,
             response=json.dumps({"success": True}),
@@ -411,6 +416,160 @@ def save_data():
             content_type="application/json"
         )
 
+
+
+"""
+Получить один элемент справочника по ID
+"""
+@app.route("/api/<reference_type>/<id>", methods=['GET'])
+def get_reference_item(reference_type: str, id: str):
+    try:
+        item = reference_service.get_by_id(reference_type, id)
+        
+        if not item:
+            return Response(
+                status=404,
+                response=json.dumps({"error": "Item not found"}),
+                content_type="application/json"
+            )
+        
+        logic = factory.create("json")
+        result = logic().build("json", [item])
+        
+        return Response(
+            status=200,
+            response=json.dumps({"result": result[0] if result else {}}),
+            content_type="application/json"
+        )
+        
+    except ArgumentException as e:
+        return Response(
+            status=400,
+            response=json.dumps({"error": str(e)}),
+            content_type="application/json"
+        )
+    except Exception as e:
+        return Response(
+            status=500,
+            response=json.dumps({"error": f"Internal server error: {str(e)}"}),
+            content_type="application/json"
+        )
+
+"""
+Добавить новый элемент в справочник
+"""
+@app.route("/api/<reference_type>", methods=['PUT'])
+def add_reference_item(reference_type: str):
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return Response(
+                status=400,
+                response=json.dumps({"error": "No JSON data received"}),
+                content_type="application/json"
+            )
+        
+        # Создаем новый объект
+        item = reference_service.create_item_from_data(reference_type, data)
+        item_id = reference_service.add(reference_type, item)
+        
+        return Response(
+            status=201,
+            response=json.dumps({"id": item_id, "success": True}),
+            content_type="application/json"
+        )
+        
+    except ArgumentException as e:
+        return Response(
+            status=400,
+            response=json.dumps({"error": str(e)}),
+            content_type="application/json"
+        )
+    except Exception as e:
+        return Response(
+            status=500,
+            response=json.dumps({"error": f"Internal server error: {str(e)}"}),
+            content_type="application/json"
+        )
+
+
+"""
+Изменить элемент справочника
+"""
+@app.route("/api/<reference_type>/<id>", methods=['PATCH'])
+def update_reference_item(reference_type: str, id: str):
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return Response(
+                status=400,
+                response=json.dumps({"error": "No JSON data received"}),
+                content_type="application/json"
+            )
+        
+        # Обновляем существующий объект напрямую из данных JSON
+        success = reference_service.update(reference_type, id, data)
+        
+        if not success:
+            return Response(
+                status=404,
+                response=json.dumps({"error": "Item not found"}),
+                content_type="application/json"
+            )
+        
+        return Response(
+            status=200,
+            response=json.dumps({"success": True}),
+            content_type="application/json"
+        )
+        
+    except ArgumentException as e:
+        return Response(
+            status=400,
+            response=json.dumps({"error": str(e)}),
+            content_type="application/json"
+        )
+    except Exception as e:
+        return Response(
+            status=500,
+            response=json.dumps({"error": f"Internal server error: {str(e)}"}),
+            content_type="application/json"
+        )
+"""
+Удалить элемент из справочника
+"""
+@app.route("/api/<reference_type>/<id>", methods=['DELETE'])
+def delete_reference_item(reference_type: str, id: str):
+    try:
+        success = reference_service.delete(reference_type, id)
+        
+        if not success:
+            return Response(
+                status=404,
+                response=json.dumps({"error": "Item not found"}),
+                content_type="application/json"
+            )
+        
+        return Response(
+            status=200,
+            response=json.dumps({"success": True}),
+            content_type="application/json"
+        )
+        
+    except ArgumentException as e:
+        return Response(
+            status=400,
+            response=json.dumps({"error": str(e)}),
+            content_type="application/json"
+        )
+    except Exception as e:
+        return Response(
+            status=500,
+            response=json.dumps({"error": f"Internal server error: {str(e)}"}),
+            content_type="application/json"
+        )
 
 
 if __name__ == '__main__':

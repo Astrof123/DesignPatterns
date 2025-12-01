@@ -12,9 +12,6 @@ class ObserveService:
         if instance is None:
             return
 
-        if not isinstance(instance, AbstractModel):
-            return
-
         if instance not in ObserveService.handlers:
             ObserveService.handlers.append(instance)
 
@@ -26,8 +23,6 @@ class ObserveService:
         if instance is None:
             return
 
-        if not isinstance(instance, AbstractModel):
-            return
 
         if instance not in ObserveService.handlers:
             ObserveService.handlers.remove(instance)

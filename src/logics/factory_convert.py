@@ -20,9 +20,6 @@ class FactoryConvert:
         "reference": ReferenceConvertor # Для ссылочных полей
     }
 
-    def __init__(self):
-        ObserveService.add(self)
-
 
     def convert(self, obj) -> dict:
 
@@ -47,6 +44,5 @@ class FactoryConvert:
                     result[field].append(self.convert(v))
 
         # Формируем событие о конвертации json
-        ObserveService.create_event(EventType.convert_to_json(), result)
 
         return result

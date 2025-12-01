@@ -1,6 +1,8 @@
 from datetime import datetime, date
 from typing import List
 
+from src.core.observe_service import ObserveService
+from src.core.event_type import EventType
 from src.logics.factory_convert import FactoryConvert
 from src.dtos.filter_sorting_dto import FilterSortingDto
 from src.core.prototype import Prototype
@@ -19,6 +21,7 @@ class BalancesManager:
     def __init__(self, data, block_period):
         self.data = data
         self.block_period = block_period
+        ObserveService.add(self)
 
     def calculation_balances_up_blocking_date(self):
         """Расчет балансов на дату блокировки
@@ -126,3 +129,11 @@ class BalancesManager:
     def block_period(self, value: date):
         Validator.validate(value, date)
         self.__block_period = value
+
+
+    def handle(self, event: str, params):
+        """
+        Обработчик событий
+        """
+        if event == EventType.change_nomenclature_unit_key():
+            self.calculation_balances_up_blocking_date()
