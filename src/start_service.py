@@ -22,7 +22,7 @@ class StartService():
         self.data[Repository.transaction_key] = {}
         self.data[Repository.storage_key] = {}
         self.data[Repository.balances_key] = []
-        ObserveService.add(self)
+        
 
     def __new__(cls):
         if not hasattr(cls, 'instance'):
@@ -275,82 +275,3 @@ class StartService():
     def balances(self, value):
         Validator.validate(value, list)
         self.data[Repository.balances_key] = value
-
-    def handle(self, event: str, params):
-        """Проверяет наличие зависимостей перед удалением"""
-        if event == EventType.delete_reference_type_key():
-            if params.reference_type == Repository.nomenclature_key:
-                self._check_nomenclature_dependencies(params.item_id)
-            elif params.reference_type == Repository.unit_measure_key:
-                self._check_unit_measurement_dependencies(params.item_id)
-            elif params.reference_type == Repository.group_nomenclature_key:
-                self._check_group_nomenclature_dependencies(params.item_id)
-            elif params.reference_type == Repository.storage_key:
-                self._check_storage_dependencies(params.item_id)        
-
-
-    def _check_nomenclature_dependencies(self, nomenclature_id: str):
-        """Проверяет использование номенклатуры в других объектах"""
-        # Проверка в рецептах
-        recipes = self.data.get(Repository.recipe_key).values()
-        for recipe in recipes:
-            for ingredient in recipe.ingredients:
-                if ingredient.nomenclature.id == nomenclature_id:
-                    raise OperationException(
-                        f"Невозможно удалить номенклатуру. Она используется в рецепте '{recipe.name}'"
-                    )
-        
-        # Проверка в транзакциях
-        transactions = self.data.get(Repository.transaction_key).values()
-        for transaction in transactions:
-            if transaction.nomenclature.id == nomenclature_id:
-                raise OperationException(
-                    f"Невозможно удалить номенклатуру. Она используется в транзакции от {transaction.date}"
-                )
-    
-    def _check_unit_measurement_dependencies(self, unit_id: str):
-        """Проверяет использование единицы измерения в других объектах"""
-        # Проверка в номенклатурах
-        nomenclatures = self.data.get(Repository.nomenclature_key).values()
-        for nomenclature in nomenclatures:
-            if nomenclature.unit_measurement.id == unit_id:
-                raise OperationException(
-                    f"Невозможно удалить единицу измерения. Она используется в номенклатуре '{nomenclature.name}'"
-                )
-        
-        # Проверка в транзакциях
-        transactions = self.data.get(Repository.transaction_key).values()
-        for transaction in transactions:
-            if transaction.unit.id == unit_id:
-                raise OperationException(
-                    f"Невозможно удалить единицу измерения. Она используется в транзакции от {transaction.date}"
-                )
-        
-        # Проверка в других единицах измерения (как базовая)
-        units = self.data.get(Repository.unit_measure_key).values()
-        for unit in units:
-            if unit.base_unit and unit.base_unit.id == unit_id:
-                raise OperationException(
-                    f"Невозможно удалить единицу измерения. Она используется как базовая для '{unit.name}'"
-                )
-    
-    def _check_group_nomenclature_dependencies(self, group_id: str):
-        """Проверяет использование группы номенклатур в других объектах"""
-        # Проверка в номенклатурах
-        nomenclatures = self.data.get(Repository.nomenclature_key).values()
-        for nomenclature in nomenclatures:
-            if nomenclature.group_nomenclature.id == group_id:
-                raise OperationException(
-                    f"Невозможно удалить группу номенклатур. Она используется в номенклатуре '{nomenclature.name}'"
-                )
-    
-    def _check_storage_dependencies(self, storage_id: str):
-        """Проверяет использование склада в других объектах"""
-        # Проверка в транзакциях
-        transactions = self.data.get(Repository.transaction_key).values()
-        for transaction in transactions:
-            if transaction.storage.id == storage_id:
-                raise OperationException(
-                    f"Невозможно удалить склад. Он используется в транзакции от {transaction.date}"
-                )
-    
