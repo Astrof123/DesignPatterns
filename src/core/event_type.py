@@ -18,6 +18,28 @@ class EventType:
     def convert_to_json() -> str:
         return "convert_to_json"
 
+    """
+    Событие - обновились/добавились элементы в справочники
+    """
+    @staticmethod
+    def change_reference_type_key() -> str:
+        return "change_reference_type"
+
+    """
+    Событие - удаляется элемент у справочника
+    """
+    @staticmethod
+    def delete_reference_type_key() -> str:
+        return "delete_reference_type"
+
+
+    """
+    Событие - обновилась единица измерения у номенклатуры
+    """
+    @staticmethod
+    def change_nomenclature_unit_key() -> str:
+        return "change_nomenclature_unit"
+    
 
     # Получить список всех событий
     def events(self):

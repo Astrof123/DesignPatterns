@@ -1,120 +1,120 @@
 {
     "group_nomenclature": [
         {
-            "id": "de0c0d2b-c835-4661-94a3-436832b60606",
+            "id": "39d5dfff-91c4-44bc-b235-46ad070325b1",
             "name": "ingredients"
         }
     ],
     "nomenclature": [
         {
             "full_name": "wheat flour",
-            "group_nomenclature": "de0c0d2b-c835-4661-94a3-436832b60606",
-            "id": "7f10a8de-cb60-4057-8eef-db06d99585f3",
+            "group_nomenclature": "39d5dfff-91c4-44bc-b235-46ad070325b1",
+            "id": "419a09b1-be60-4678-9772-6838e65380df",
             "name": "wheat flour",
-            "unit_measurement": "4569bcbf-271a-4007-ac6e-206560493976"
+            "unit_measurement": "29395083-0dae-46c3-a4d4-10cc11d20b9b"
         },
         {
             "full_name": "baking powder",
-            "group_nomenclature": "de0c0d2b-c835-4661-94a3-436832b60606",
-            "id": "e6dd4d18-8934-4df6-86c4-7a86f36f1ef6",
+            "group_nomenclature": "39d5dfff-91c4-44bc-b235-46ad070325b1",
+            "id": "93c8f583-cdc5-4547-940e-2a334e43e2db",
             "name": "baking powder",
-            "unit_measurement": "4569bcbf-271a-4007-ac6e-206560493976"
+            "unit_measurement": "29395083-0dae-46c3-a4d4-10cc11d20b9b"
         },
         {
-            "full_name": "oatmeal",
-            "group_nomenclature": "de0c0d2b-c835-4661-94a3-436832b60606",
-            "id": "131768cc-f771-4b6d-8803-f75a338dcbe4",
+            "full_name": "Другое название",
+            "group_nomenclature": "39d5dfff-91c4-44bc-b235-46ad070325b1",
+            "id": "5922789f-11b9-4bf0-830d-8e26acd74b58",
             "name": "oatmeal",
-            "unit_measurement": "4569bcbf-271a-4007-ac6e-206560493976"
+            "unit_measurement": "29395083-0dae-46c3-a4d4-10cc11d20b9b"
         },
         {
             "full_name": "granulated sugar",
-            "group_nomenclature": "de0c0d2b-c835-4661-94a3-436832b60606",
-            "id": "2b39092e-a0de-4de9-8939-98c6221f0b5f",
+            "group_nomenclature": "39d5dfff-91c4-44bc-b235-46ad070325b1",
+            "id": "8f22ce44-5568-46a2-86b7-6c5ffbea2ece",
             "name": "sugar",
-            "unit_measurement": "4569bcbf-271a-4007-ac6e-206560493976"
+            "unit_measurement": "29395083-0dae-46c3-a4d4-10cc11d20b9b"
         },
         {
             "full_name": "butter",
-            "group_nomenclature": "de0c0d2b-c835-4661-94a3-436832b60606",
-            "id": "076d1bda-55ac-4acc-be2d-00a16ebe9c54",
+            "group_nomenclature": "39d5dfff-91c4-44bc-b235-46ad070325b1",
+            "id": "589aefcf-3b9f-486f-a776-af321ca688ec",
             "name": "butter",
-            "unit_measurement": "4569bcbf-271a-4007-ac6e-206560493976"
+            "unit_measurement": "29395083-0dae-46c3-a4d4-10cc11d20b9b"
         },
         {
             "full_name": "chicken egg",
-            "group_nomenclature": "de0c0d2b-c835-4661-94a3-436832b60606",
-            "id": "10289e8d-7f0d-40cf-be37-760d4dea2ff0",
+            "group_nomenclature": "39d5dfff-91c4-44bc-b235-46ad070325b1",
+            "id": "7374ac81-df08-4321-8c98-29b605158e45",
             "name": "chicken egg",
-            "unit_measurement": "4569bcbf-271a-4007-ac6e-206560493976"
+            "unit_measurement": "29395083-0dae-46c3-a4d4-10cc11d20b9b"
         },
         {
             "full_name": "dark chocolate",
-            "group_nomenclature": "de0c0d2b-c835-4661-94a3-436832b60606",
-            "id": "c445beb4-36f5-4902-9398-7d399232c9da",
+            "group_nomenclature": "39d5dfff-91c4-44bc-b235-46ad070325b1",
+            "id": "3484a380-866e-4f31-8a0f-19c3482dbbac",
             "name": "dark chocolate",
-            "unit_measurement": "4569bcbf-271a-4007-ac6e-206560493976"
+            "unit_measurement": "29395083-0dae-46c3-a4d4-10cc11d20b9b"
         },
         {
             "full_name": "salt",
-            "group_nomenclature": "de0c0d2b-c835-4661-94a3-436832b60606",
-            "id": "f07d08aa-f448-44d9-9ebf-5d777e942601",
+            "group_nomenclature": "39d5dfff-91c4-44bc-b235-46ad070325b1",
+            "id": "ebadf599-8a45-48c6-a132-c3fd22359f5e",
             "name": "salt",
-            "unit_measurement": "4569bcbf-271a-4007-ac6e-206560493976"
+            "unit_measurement": "29395083-0dae-46c3-a4d4-10cc11d20b9b"
         }
     ],
     "recipe": [
         {
             "description": "Время приготовления: 25 минут\n            Духовку разогрейте до 180°C. Противень застелите бумагой для выпечки.\n            Шоколад измельчите на небольшие кусочки ножом.\n            Масло комнатной температуры взбейте с сахаром до легкой пены.\n            Добавьте яйцо и взбивайте еще 1-2 минуты до однородности.\n            В отдельной миске смешайте овсяные хлопья, муку, разрыхлитель и соль.\n            Соедините сухие ингредиенты с масляной смесью, добавьте измельченный шоколад.\n            Замесите тесто ложкой до однородной консистенции.\n            Сформируйте небольшие шарики (примерно по 30-40 гр), выложите на противень и слегка приплюсните.\n            Выпекайте 12-15 минут до золотистого края. Дайте печенью остыть на противне 5 минут перед подачей.\n            Приятного аппетита!",
-            "id": "09b52bbf-713b-4c48-85bf-271f53261956",
+            "id": "1e0d18ad-e823-45f6-977a-c2971c2eb224",
             "ingredients": [
                 {
                     "count": 100,
-                    "id": "b6c5dec7-3209-4eaa-aded-554f2476fcf7",
+                    "id": "38638bf2-674d-45dd-b678-b091a6a0e7cf",
                     "name": "Ингредиент: wheat flour",
-                    "nomenclature": "7f10a8de-cb60-4057-8eef-db06d99585f3"
+                    "nomenclature": "419a09b1-be60-4678-9772-6838e65380df"
                 },
                 {
                     "count": 200,
-                    "id": "466568c6-d1b7-479f-bc88-9d9eeefcfc93",
+                    "id": "9cd6505b-abd6-42fa-9b77-5837e454eb5e",
                     "name": "Ингредиент: oatmeal",
-                    "nomenclature": "131768cc-f771-4b6d-8803-f75a338dcbe4"
+                    "nomenclature": "5922789f-11b9-4bf0-830d-8e26acd74b58"
                 },
                 {
                     "count": 150,
-                    "id": "6208ad16-de7f-41a9-8fe2-ea9696b3b8a9",
+                    "id": "35a0adba-98fc-4b76-9999-4c700087f041",
                     "name": "Ингредиент: sugar",
-                    "nomenclature": "2b39092e-a0de-4de9-8939-98c6221f0b5f"
+                    "nomenclature": "8f22ce44-5568-46a2-86b7-6c5ffbea2ece"
                 },
                 {
                     "count": 180,
-                    "id": "c3cf41b3-fca6-42fd-9528-61dbe807a8bc",
+                    "id": "e66c4dfe-277c-4d03-957a-dbf5d9ed9c1d",
                     "name": "Ингредиент: butter",
-                    "nomenclature": "076d1bda-55ac-4acc-be2d-00a16ebe9c54"
+                    "nomenclature": "589aefcf-3b9f-486f-a776-af321ca688ec"
                 },
                 {
                     "count": 55,
-                    "id": "5f4c6c65-2496-435f-ad96-15eaf7e23f5c",
+                    "id": "e9b726c4-00dc-468a-8ae9-b9b813015e08",
                     "name": "Ингредиент: chicken egg",
-                    "nomenclature": "10289e8d-7f0d-40cf-be37-760d4dea2ff0"
+                    "nomenclature": "7374ac81-df08-4321-8c98-29b605158e45"
                 },
                 {
                     "count": 100,
-                    "id": "2afdc546-8cb0-431d-86ff-a52b3237a866",
+                    "id": "f8c3548b-c324-4f9f-ac6b-b17009129cd8",
                     "name": "Ингредиент: dark chocolate",
-                    "nomenclature": "c445beb4-36f5-4902-9398-7d399232c9da"
+                    "nomenclature": "3484a380-866e-4f31-8a0f-19c3482dbbac"
                 },
                 {
                     "count": 5,
-                    "id": "55352326-7f68-47f6-ac0e-eb5457328b0e",
+                    "id": "dddf8a33-e1d7-4cd8-b17c-962ec57dd4ca",
                     "name": "Ингредиент: baking powder",
-                    "nomenclature": "e6dd4d18-8934-4df6-86c4-7a86f36f1ef6"
+                    "nomenclature": "93c8f583-cdc5-4547-940e-2a334e43e2db"
                 },
                 {
                     "count": 2,
-                    "id": "0ffdc822-510a-4aa0-8547-15f94e5147da",
+                    "id": "1e42a2a8-3d90-4049-8eb6-8eb769ddc7aa",
                     "name": "Ингредиент: salt",
-                    "nomenclature": "f07d08aa-f448-44d9-9ebf-5d777e942601"
+                    "nomenclature": "ebadf599-8a45-48c6-a132-c3fd22359f5e"
                 }
             ],
             "name": "cookies"
@@ -123,69 +123,69 @@
     "storage": [
         {
             "address": "Улица Мира 122",
-            "id": "e720eee3-bea4-409d-b44b-72b41db5a63e",
+            "id": "2ef481ee-1ede-4f80-98de-5f677a2733a3",
             "name": "Первый склад"
         },
         {
             "address": "Улица Ленина 44",
-            "id": "62aca211-9d2a-4ff0-bea9-fbf471fe0738",
+            "id": "ac58935a-43c3-4ade-933c-1dcd3fedd4fe",
             "name": "Второй склад"
         }
     ],
     "transaction": [
         {
-            "id": "845236de-1376-41c3-a53d-a50b1a8d26ca",
-            "nomenclature": "7f10a8de-cb60-4057-8eef-db06d99585f3",
+            "id": "9f86f1a2-adec-4c8b-90b4-5bbcd50ab65a",
+            "nomenclature": "419a09b1-be60-4678-9772-6838e65380df",
             "quantity": 5.0,
-            "storage": "e720eee3-bea4-409d-b44b-72b41db5a63e",
-            "unit": "1c8fba1c-750b-4abb-b057-a05ad58e5254"
+            "storage": "2ef481ee-1ede-4f80-98de-5f677a2733a3",
+            "unit": "f137b180-65b1-44e7-a1e2-02a2c5a22cfa"
         },
         {
-            "id": "e3f581ac-a5dd-42b9-b5a1-d4d7db7d2f38",
-            "nomenclature": "e6dd4d18-8934-4df6-86c4-7a86f36f1ef6",
+            "id": "6fe83ba4-25ac-4840-aacf-bb1a3c5778a4",
+            "nomenclature": "93c8f583-cdc5-4547-940e-2a334e43e2db",
             "quantity": 800.0,
-            "storage": "e720eee3-bea4-409d-b44b-72b41db5a63e",
-            "unit": "4569bcbf-271a-4007-ac6e-206560493976"
+            "storage": "2ef481ee-1ede-4f80-98de-5f677a2733a3",
+            "unit": "29395083-0dae-46c3-a4d4-10cc11d20b9b"
         },
         {
-            "id": "767b0abb-1a47-43dc-a0a3-331863fd3fe4",
-            "nomenclature": "7f10a8de-cb60-4057-8eef-db06d99585f3",
+            "id": "3b92ad83-0e5f-448d-9664-70d777a4ad4b",
+            "nomenclature": "419a09b1-be60-4678-9772-6838e65380df",
             "quantity": 11.0,
-            "storage": "e720eee3-bea4-409d-b44b-72b41db5a63e",
-            "unit": "1c8fba1c-750b-4abb-b057-a05ad58e5254"
+            "storage": "2ef481ee-1ede-4f80-98de-5f677a2733a3",
+            "unit": "f137b180-65b1-44e7-a1e2-02a2c5a22cfa"
         },
         {
-            "id": "ca24aa7f-b91f-45ed-be20-934970f1672b",
-            "nomenclature": "7f10a8de-cb60-4057-8eef-db06d99585f3",
+            "id": "ce6c4970-01a7-49d4-97fe-a7db7d013561",
+            "nomenclature": "419a09b1-be60-4678-9772-6838e65380df",
             "quantity": -5.0,
-            "storage": "e720eee3-bea4-409d-b44b-72b41db5a63e",
-            "unit": "1c8fba1c-750b-4abb-b057-a05ad58e5254"
+            "storage": "2ef481ee-1ede-4f80-98de-5f677a2733a3",
+            "unit": "f137b180-65b1-44e7-a1e2-02a2c5a22cfa"
         },
         {
-            "id": "df2ec374-ca82-4601-980b-dd0be7b28234",
-            "nomenclature": "e6dd4d18-8934-4df6-86c4-7a86f36f1ef6",
+            "id": "dd2e486d-ea24-4850-878b-da2aec721dd6",
+            "nomenclature": "93c8f583-cdc5-4547-940e-2a334e43e2db",
             "quantity": 500.0,
-            "storage": "e720eee3-bea4-409d-b44b-72b41db5a63e",
-            "unit": "4569bcbf-271a-4007-ac6e-206560493976"
+            "storage": "2ef481ee-1ede-4f80-98de-5f677a2733a3",
+            "unit": "29395083-0dae-46c3-a4d4-10cc11d20b9b"
         },
         {
-            "id": "a6f96ad2-8689-471a-982b-2e2e94a5d04e",
-            "nomenclature": "e6dd4d18-8934-4df6-86c4-7a86f36f1ef6",
+            "id": "e1576fe5-743d-46ea-8ee6-bbc94a6e8261",
+            "nomenclature": "93c8f583-cdc5-4547-940e-2a334e43e2db",
             "quantity": -1100.0,
-            "storage": "e720eee3-bea4-409d-b44b-72b41db5a63e",
-            "unit": "4569bcbf-271a-4007-ac6e-206560493976"
+            "storage": "2ef481ee-1ede-4f80-98de-5f677a2733a3",
+            "unit": "29395083-0dae-46c3-a4d4-10cc11d20b9b"
         }
     ],
     "unit_measure": [
         {
             "coefficient": 1,
-            "id": "4569bcbf-271a-4007-ac6e-206560493976",
+            "id": "29395083-0dae-46c3-a4d4-10cc11d20b9b",
             "name": "грамм"
         },
         {
-            "base_unit": "4569bcbf-271a-4007-ac6e-206560493976",
+            "base_unit": "29395083-0dae-46c3-a4d4-10cc11d20b9b",
             "coefficient": 1000,
-            "id": "1c8fba1c-750b-4abb-b057-a05ad58e5254",
+            "id": "f137b180-65b1-44e7-a1e2-02a2c5a22cfa",
             "name": "кг"
         }
     ]
