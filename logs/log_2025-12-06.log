@@ -1,0 +1,11 @@
+2025-12-06 15:35:58 | INFO | Main | Приложение запускается | {}
+2025-12-06 15:35:58 | INFO | Main | Настройки логирования: уровень=INFO, режим=both | {}
+2025-12-06 15:35:58 | INFO | Main | Дата блокировки установлена: 2025-10-28 | {}
+2025-12-06 15:35:58 | INFO | Main | Все сервисы успешно инициализированы | {}
+2025-12-06 15:35:58 | INFO | Main | Запуск сервера на 0.0.0.0:8080 | {}
+2025-12-06 15:36:34 | INFO | API | API Request: POST /api/data/nomenclature/json | {"method": "POST", "endpoint": "/api/data/nomenclature/json"}
+2025-12-06 15:36:34 | INFO | API | Фильтрованные данные nomenclature успешно преобразованы в формат json | {}
+2025-12-06 15:39:54 | INFO | API | API Request: PATCH /api/nomenclature/2bdd0aa1-f235-4910-8b32-8c84abc741fa | {"method": "PATCH", "endpoint": "/api/nomenclature/2bdd0aa1-f235-4910-8b32-8c84abc741fa", "request_data": {"full_name": "Изменено"}}
+2025-12-06 15:39:54 | INFO | ReferenceService | Обновление элемента 2bdd0aa1-f235-4910-8b32-8c84abc741fa в справочнике nomenclature | {"update_data": {"full_name": "Изменено"}}
+2025-12-06 15:39:54 | INFO | ReferenceService | Элемент 2bdd0aa1-f235-4910-8b32-8c84abc741fa успешно обновлен | {}
+2025-12-06 15:39:54 | INFO | API | Элемент nomenclature/2bdd0aa1-f235-4910-8b32-8c84abc741fa успешно обновлен | {}
