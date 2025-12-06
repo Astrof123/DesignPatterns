@@ -9,5 +9,10 @@
     },
     "response_format": "json",
     "first_start": true,
-    "block_period": "2025-10-28"
+    "block_period": "2025-10-28",
+    "log_level": "INFO",
+    "log_mode": "both",
+    "log_date_format": "%Y-%m-%d %H:%M:%S",
+    "log_format": "{timestamp} | {level:8} | {source:20} | {message}",
+    "log_directory": "logs"
 }

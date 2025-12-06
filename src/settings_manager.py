@@ -72,9 +72,22 @@ class SettingsManager:
         if "block_period" in data:
             self.__settings.block_period = datetime.datetime.strptime(data["block_period"], "%Y-%m-%dT%H:%M:%S").date()
         
-            return True
+        if "log_level" in data:
+            self.__settings.log_level = data["log_level"]
+        
+        if "log_mode" in data:
+            self.__settings.log_mode = data["log_mode"]
+        
+        if "log_date_format" in data:
+            self.__settings.log_date_format = data["log_date_format"]
+        
+        if "log_format" in data:
+            self.__settings.log_format = data["log_format"]
+        
+        if "log_directory" in data:
+            self.__settings.log_directory = data["log_directory"]
 
-        return False
+        return True
 
     def default_settings(self):
         self.__settings.company.name = "Рога и копыта"
@@ -86,6 +99,10 @@ class SettingsManager:
         self.__settings.response_format = "CSV"
         self.__settings.first_start = True
         self.__settings.block_period = datetime.datetime.strptime("2025-10-28", "%Y-%m-%d").date()
-
+        self.__settings.log_level = "INFO"
+        self.__settings.log_mode = "both"
+        self.__settings.log_date_format = "%Y-%m-%d %H:%M:%S"
+        self.__settings.log_format = "{timestamp} | {level} | {source} | {message} | {data}"
+        self.__settings.log_directory = "logs"
 
     

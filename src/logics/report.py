@@ -5,6 +5,7 @@ from src.models.nomenclature_model import NomenclatureModel
 from src.models.transaction_model import TransactionModel
 from src.repository import Repository
 from src.core.validator import Validator
+from src.core.logger import Logger  # Добавляем импорт
 from typing import List
 
 
@@ -14,6 +15,8 @@ class Report:
 
     def __init__(self, data):
         self.data = data
+        Logger.debug("Report", "Инициализация генератора отчетов")
+    
     @property
     def data(self):
         return self.__data
@@ -27,11 +30,19 @@ class Report:
     Генерирует отчет
     """
     def generateReport(self, storage, start_date, end_date, filtersDto = None, filter_model = None) -> list:
+        Logger.info("Report", "Генерация отчета", {
+            "storage": getattr(storage, 'name', str(storage)),
+            "start_date": start_date,
+            "end_date": end_date,
+            "has_filters": filtersDto is not None,
+            "filter_model": filter_model
+        })
+        
         nomenclatures: List[NomenclatureModel] = list(self.data[Repository.nomenclature_key].values())
 
         if filtersDto is not None and filter_model == "nomenclature":
+            Logger.debug("Report", "Применение фильтров к номенклатурам")
             prototype = Prototype(nomenclatures)
-        
             nomenclatures = prototype.filter(prototype, filtersDto).data
 
         report = []
@@ -54,6 +65,7 @@ class Report:
 
             report.append(row)
 
+        Logger.info("Report", f"Отчет сгенерирован, строк: {len(report)}")
         return report
 
 
@@ -61,13 +73,14 @@ class Report:
     Рассчитывает баланс по номенклатуре
     """
     def calculateBalance(self, nomenclature, storage, start_date, end_date, filtersDto = None, filter_model = None):
+        Logger.debug("Report", f"Расчет баланса для номенклатуры {getattr(nomenclature, 'name', 'unknown')}")
+        
         transactions: List[TransactionModel] = list(self.data[Repository.transaction_key].values())
 
         if filtersDto is not None and filter_model == "transaction":
+            Logger.debug("Report", "Применение фильтров к транзакциям")
             prototype = Prototype(transactions)
-        
             transactions = prototype.filter(prototype, filtersDto).data
-
 
         report_prototype = Prototype(transactions)
 
@@ -125,5 +138,5 @@ class Report:
             if quantity < 0:
                 outcome += quantity * -1
 
-
+        Logger.debug("Report", f"Баланс рассчитан: начальный={start_balance}, приход={income}, расход={outcome}")
         return [start_balance, income, outcome]
